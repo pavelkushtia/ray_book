@@ -10,7 +10,7 @@
         font-family: 'Georgia', 'Times New Roman', serif;
         line-height: 1.6;
         color: #333;
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         padding: 20px;
     }
@@ -20,6 +20,7 @@
         .page-break { page-break-before: always; }
         .no-print { display: none; }
         h1, h2, h3 { page-break-after: avoid; }
+        .mermaid { page-break-inside: avoid; }
     }
     
     h1 { color: #1976d2; font-size: 2.5em; margin: 40px 0 30px 0; border-bottom: 3px solid #1976d2; padding-bottom: 15px; }
@@ -104,14 +105,15 @@
         padding-left: 25px;
     }
     
-    .diagram-placeholder {
-        background-color: #e3f2fd;
-        border: 2px dashed #1976d2;
+    /* Mermaid diagram styling */
+    .mermaid {
+        background-color: #fafafa;
+        border: 1px solid #e1e4e8;
+        border-radius: 8px;
         padding: 20px;
-        margin: 20px 0;
+        margin: 25px 0;
         text-align: center;
-        color: #1976d2;
-        font-weight: bold;
+        page-break-inside: avoid;
     }
     
     .chapter-separator {
@@ -120,7 +122,51 @@
         margin: 50px 0;
         page-break-after: always;
     }
+    
+    /* Mermaid error fallback */
+    .mermaid-error {
+        background-color: #ffebee;
+        border: 2px dashed #f44336;
+        padding: 20px;
+        margin: 20px 0;
+        text-align: center;
+        color: #c62828;
+        font-weight: bold;
+    }
     </style>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.7.0/dist/mermaid.min.js"></script>
+    <script>
+        // Configure Mermaid
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            sequence: {
+                useMaxWidth: true,
+                width: 150
+            },
+            gitgraph: {
+                useMaxWidth: true
+            }
+        });
+        
+        // Enhanced error handling
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                // Check if any mermaid diagrams failed to render
+                document.querySelectorAll('.mermaid').forEach(function(element) {
+                    if (element.getAttribute('data-processed') !== 'true') {
+                        element.innerHTML = '<div class="mermaid-error">⚠️ Diagram failed to render. Please refresh the page or check your internet connection.</div>';
+                    }
+                });
+            }, 5000);
+        });
+    </script>
     
 </head>
 <body>
@@ -133,11 +179,12 @@
 </div>
 
 <div class="no-print" style="background: #e8f5e8; padding: 15px; margin: 20px 0; border-radius: 8px;">
-    <h3 style="color: #2e7d32; margin-top: 0;">📱 How to Use This E-book</h3>
+    <h3 style="color: #2e7d32; margin-top: 0;">📱 Interactive E-book Features</h3>
     <ul style="margin: 10px 0; color: #2e7d32;">
-        <li><strong>Print to PDF:</strong> Use Ctrl+P → Save as PDF for offline reading</li>
-        <li><strong>Search:</strong> Use Ctrl+F to find specific topics</li>
-        <li><strong>Navigate:</strong> Use the table of contents below</li>
+        <li><strong>🎨 Live Diagrams:</strong> All Mermaid diagrams render dynamically</li>
+        <li><strong>🖨️ Print to PDF:</strong> Use Ctrl+P → Save as PDF for offline reading</li>
+        <li><strong>🔍 Search:</strong> Use Ctrl+F to find specific topics</li>
+        <li><strong>📱 Responsive:</strong> Works on desktop, tablet, and mobile</li>
     </ul>
 </div>
 
@@ -194,10 +241,54 @@
 </ul>
 <h2 id="how-this-book-is-organized">📚 How This Book is Organized</h2>
 <p>This documentation is structured as a progressive journey through Ray's architecture, from fundamental concepts to advanced internals. Each chapter builds upon previous knowledge while remaining self-contained enough for reference use.</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "📘 Part I: Fundamentals"
         CH1["Chapter 1<br/>🏛️ Ray Architecture"]
-    ...</div>
+        CH2["Chapter 2<br/>🎯 Driver System"]
+        CH3["Chapter 3<br/>📋 Task Lifecycle"]
+        CH4["Chapter 4<br/>🎭 Actor Lifecycle"]
+        CH5["Chapter 5<br/>💾 Memory System"]
+    end
+
+    subgraph "📗 Part II: Core Services"
+        CH6["Chapter 6<br/>🏛️ Global Control Service"]
+        CH7["Chapter 7<br/>🔧 Raylet System"]
+        CH8["Chapter 8<br/>💿 Object Store"]
+    end
+
+    subgraph "📙 Part III: Advanced Systems"
+        CH9["Chapter 9<br/>⚖️ Distributed Scheduling"]
+        CH10["Chapter 10<br/>📈 Autoscaling"]
+        CH11["Chapter 11<br/>🛡️ High Availability"]
+    end
+
+    subgraph "📔 Part IV: System Internals"
+        CH12["Chapter 12<br/>🌐 Network Protocols"]
+        CH13["Chapter 13<br/>🔌 Port Management"]
+    end
+
+    CH1 --> CH2
+    CH2 --> CH3
+    CH3 --> CH4
+    CH4 --> CH5
+
+    CH5 --> CH6
+    CH6 --> CH7
+    CH7 --> CH8
+
+    CH8 --> CH9
+    CH9 --> CH10
+    CH10 --> CH11
+
+    CH11 --> CH12
+    CH12 --> CH13
+
+    style CH1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style CH6 fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style CH9 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style CH12 fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+</div>
 
 <hr />
 <h1 id="table-of-contents">📋 Table of Contents</h1>
@@ -432,39 +523,91 @@ Follow Parts I → II → III → IV sequentially for comprehensive understandin
 <li><strong>Performance Optimization</strong>: Efficient algorithms for large-scale clusters</li>
 </ul>
 <h3 id="scheduling-hierarchy">Scheduling Hierarchy</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[User Workload] --> B[Core Worker]
     B --> C[Lease Policy]
-    C --> D[Raylet Node M...</div>
+    C --> D[Raylet Node Manager]
+    D --> E[Cluster Task Manager]
+    E --> F[Cluster Resource Scheduler]
+    F --> G[Scheduling Policies]
+    G --> H[Local Task Manager]
+    H --> I[Worker Pool]
+
+    J[GCS Server] --> K[GCS Actor Scheduler]
+    J --> L[GCS Placement Group Scheduler]
+
+    K --> F
+    L --> F
+
+    M[Autoscaler] --> N[Resource Demand Scheduler]
+    N --> O[Node Provider]
+</div>
 
 <h2 id="scheduling-architecture-overview">Scheduling Architecture Overview</h2>
 <h3 id="multi-level-scheduling-architecture">Multi-Level Scheduling Architecture</h3>
 <p>Ray implements a hierarchical scheduling architecture with multiple decision points:</p>
 <h4 id="1-client-side-scheduling">1. Client-Side Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph LR
+<p><div class="mermaid">
+graph LR
     A[ray.remote Call] --&gt; B[Core Worker]
     B --&gt; C[Locality-Aware Lease Policy]
-    C --...</div></p>
+    C --&gt; D[Best Node Selection]
+    D --&gt; E[Raylet RPC]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/core_worker/lease_policy.cc</code></p>
 <p>The client-side scheduling makes initial placement decisions based on:
 - Data locality (object location)
 - Scheduling strategies (spread, node affinity)
 - Resource requirements</p>
 <h4 id="2-raylet-level-scheduling">2. Raylet-Level Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph TD
+<p><div class="mermaid">
+graph TD
     A[Raylet Receives Task] --&gt; B[Cluster Task Manager]
-    B --&gt; C[Resource Availability C...</div></p>
+    B --&gt; C[Resource Availability Check]
+    C --&gt; D{Resources Available?}
+    D --&gt;|Yes| E[Local Task Manager]
+    D --&gt;|No| F[Spillback Decision]
+    F --&gt; G[Remote Node Selection]
+    G --&gt; H[Forward to Remote Raylet]
+    E --&gt; I[Worker Assignment]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/raylet/scheduling/cluster_task_manager.cc</code></p>
 <h4 id="3-gcs-level-scheduling">3. GCS-Level Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph TD
+<p><div class="mermaid">
+graph TD
     A[GCS Scheduling Request] --&gt; B{Task Type}
-    B --&gt;|Actor Creation| C[GCS Actor Schedu...</div></p>
+    B --&gt;|Actor Creation| C[GCS Actor Scheduler]
+    B --&gt;|Placement Group| D[GCS Placement Group Scheduler]
+    C --&gt; E[Cluster Resource Scheduler]
+    D --&gt; E
+    E --&gt; F[Node Selection]
+    F --&gt; G[Resource Reservation]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/gcs/gcs_server/gcs_actor_scheduler.cc</code></p>
 <h3 id="core-scheduling-flow">Core Scheduling Flow</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant CW as Core Worker
     participant LP as Lease Policy
-    participant...</div>
+    participant RM as Raylet Manager
+    participant CTM as Cluster Task Manager
+    participant CRS as Cluster Resource Scheduler
+    participant LTM as Local Task Manager
+    participant WP as Worker Pool
+
+    CW->>LP: GetBestNodeForTask()
+    LP->>LP: Analyze locality & strategy
+    LP->>RM: RequestWorkerLease()
+    RM->>CTM: QueueAndScheduleTask()
+    CTM->>CRS: GetBestSchedulableNode()
+    CRS->>CRS: Apply scheduling policy
+    CRS-->>CTM: Selected node
+    CTM->>LTM: QueueAndScheduleTask() [if local]
+    LTM->>WP: PopWorker()
+    WP-->>LTM: Worker instance
+    LTM-->>CTM: Task dispatched
+</div>
 
 <h2 id="core-scheduling-components">Core Scheduling Components</h2>
 <h3 id="clusterresourcescheduler">ClusterResourceScheduler</h3>
@@ -652,9 +795,18 @@ TEST_F(ClusterResourceSchedulerTest, DynamicResourceTest) {
 
 <h3 id="resource-binpacking">Resource Binpacking</h3>
 <p>Ray implements sophisticated binpacking for resource allocation:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Resource Request] --> B[Sort by Resource Requirements]
-    B --> C[Find Best Fit Node...</div>
+    B --> C[Find Best Fit Node]
+    C --> D{Resources Available?}
+    D -->|Yes| E[Allocate Resources]
+    D -->|No| F[Try Next Node]
+    F --> G{More Nodes?}
+    G -->|Yes| C
+    G -->|No| H[Request Infeasible]
+    E --> I[Update Node Resources]
+</div>
 
 <h2 id="task-scheduling-algorithms">Task Scheduling Algorithms</h2>
 <h3 id="hybrid-scheduling-algorithm">Hybrid Scheduling Algorithm</h3>
@@ -790,10 +942,19 @@ actor = MyActor.remote()
 </code></pre>
 
 <h3 id="actor-lifecycle-and-scheduling">Actor Lifecycle and Scheduling</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Actor Creation Request] --> B[GCS Actor Scheduler]
     B --> C{Scheduling Mode}
-    C...</div>
+    C -->|GCS Scheduling| D[Cluster Task Manager]
+    C -->|Raylet Scheduling| E[Select Forwarding Node]
+    D --> F[Resource Allocation]
+    E --> G[Direct Worker Lease]
+    F --> H[Worker Assignment]
+    G --> H
+    H --> I[Actor Initialization]
+    I --> J[Ready for Method Calls]
+</div>
 
 <h3 id="actor-scheduling-considerations">Actor Scheduling Considerations</h3>
 <p><strong>Resource Lifetime</strong>: Actors hold resources for their entire lifetime</p>
@@ -885,9 +1046,22 @@ actor = MyActor.remote()
 <li><strong>Algorithm</strong>: One bundle per node constraint</li>
 </ul>
 <h3 id="bundle-scheduling-algorithm">Bundle Scheduling Algorithm</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Placement Group Request] --> B[Parse Bundles]
-    B --> C[Sort by Resource Requiremen...</div>
+    B --> C[Sort by Resource Requirements]
+    C --> D[Apply Placement Strategy]
+    D --> E{Strategy Type}
+    E -->|PACK| F[First-Fit Decreasing]
+    E -->|SPREAD| G[Round-Robin Distribution]
+    E -->|STRICT_PACK| H[Single Node Placement]
+    E -->|STRICT_SPREAD| I[One Bundle Per Node]
+    F --> J[Resource Reservation]
+    G --> J
+    H --> J
+    I --> J
+    J --> K[Bundle Commitment]
+</div>
 
 <h3 id="bundle-resource-formatting">Bundle Resource Formatting</h3>
 <p>Ray formats placement group resources with special naming:</p>
@@ -933,10 +1107,28 @@ std::string FormatPlacementGroupResource(
 </code></pre>
 
 <h3 id="placement-group-lifecycle">Placement Group Lifecycle</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant User
     participant GCS as GCS PG Scheduler
-    participant CRS as ...</div>
+    participant CRS as Cluster Resource Scheduler
+    participant Raylet
+    participant Worker
+
+    User->>GCS: ray.util.placement_group()
+    GCS->>GCS: Parse bundles & strategy
+    GCS->>CRS: Schedule(bundle_list, options)
+    CRS->>CRS: Apply placement strategy
+    CRS-->>GCS: Selected nodes
+    GCS->>Raylet: PrepareBundleResources()
+    Raylet-->>GCS: Resources reserved
+    GCS->>Raylet: CommitBundleResources()
+    Raylet-->>GCS: Resources committed
+    GCS-->>User: Placement group ready
+
+    User->>Worker: Task with PG scheduling strategy
+    Worker->>Raylet: Use PG bundle resources
+</div>
 
 <h2 id="scheduling-strategies">Scheduling Strategies</h2>
 <h3 id="strategy-types-and-implementation">Strategy Types and Implementation</h3>
@@ -1180,10 +1372,18 @@ struct NodeResources {
 </code></pre>
 
 <h3 id="locality-vs-strategy-priority">Locality vs Strategy Priority</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Task Submission] --> B{Explicit Strategy?}
     B -->|Yes| C[Use Explicit Strategy]
-  ...</div>
+    B -->|No| D[Check Data Locality]
+    D --> E{Objects Local?}
+    E -->|Yes| F[Select Node with Most Data]
+    E -->|No| G[Use Default Strategy]
+    C --> H[Schedule Task]
+    F --> H
+    G --> H
+</div>
 
 <h3 id="locality-testing">Locality Testing</h3>
 <pre><code class="cpp">// From src/ray/tests/test_scheduling.py
@@ -1221,9 +1421,20 @@ def test_locality_aware_leasing(ray_start_cluster):
 </code></pre>
 
 <h3 id="resource-synchronization">Resource Synchronization</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant LRM as Local Resource Manager
-    participant CRM as Cluster Resourc...</div>
+    participant CRM as Cluster Resource Manager
+    participant GCS as GCS Server
+    participant Remote as Remote Raylet
+
+    LRM->>CRM: UpdateLocalResources()
+    CRM->>GCS: ReportResourceUsage()
+    GCS->>Remote: BroadcastResourceUpdate()
+    Remote->>CRM: UpdateRemoteNodeResources()
+
+    Note over CRM: Maintains consistent cluster view
+</div>
 
 <h3 id="resource-reporting">Resource Reporting</h3>
 <p><strong>Location</strong>: <code>src/ray/raylet/scheduling/scheduler_resource_reporter.cc</code></p>
@@ -1776,16 +1987,117 @@ task_queue_size = Counter(
 <p><strong>Seamless Local-to-Distributed</strong>: Your Python code looks almost identical whether running locally or on a 1000-node cluster. The driver handles all the complexity of distribution transparently.</p>
 <p><strong>Fault-Tolerant Coordination</strong>: The driver can recover from worker failures, network partitions, and other distributed system challenges while maintaining program correctness.</p>
 <h3 id="core-driver-responsibilities">Core Driver Responsibilities</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎭 Driver Process"
-        SCRIPT["Python Script<br/>📝 Your application code"]...</div>
+        SCRIPT["Python Script<br/>📝 Your application code"]
+        RAY_API["Ray API Layer<br/>🔧 @ray.remote decorators"]
+        CORE_WORKER["CoreWorker<br/>🧠 Driver's execution engine"]
+    end
+
+    subgraph "🌐 Cluster Coordination"
+        TASK_SUB["Task Submission<br/>📋 Distribute work"]
+        ACTOR_MGT["Actor Management<br/>🎭 Create/destroy actors"]
+        OBJ_MGT["Object Management<br/>💾 Track references"]
+        RESULT_COL["Result Collection<br/>📊 Gather outputs"]
+    end
+
+    subgraph "🔗 Communication Channels"
+        GCS_CONN["GCS Connection<br/>🏛️ Global state"]
+        RAYLET_CONN["Raylet Connections<br/>🔧 Local execution"]
+        OBJ_STORE_CONN["Object Store<br/>💿 Data storage"]
+    end
+
+    SCRIPT --> RAY_API
+    RAY_API --> CORE_WORKER
+    CORE_WORKER --> TASK_SUB
+    CORE_WORKER --> ACTOR_MGT
+    CORE_WORKER --> OBJ_MGT
+    CORE_WORKER --> RESULT_COL
+
+    TASK_SUB --> GCS_CONN
+    ACTOR_MGT --> GCS_CONN
+    OBJ_MGT --> RAYLET_CONN
+    RESULT_COL --> OBJ_STORE_CONN
+
+    style SCRIPT fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style CORE_WORKER fill:#f3e5f5,stroke:#4a148c,stroke-width:3px,color:#000
+    style TASK_SUB fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style ACTOR_MGT fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style OBJ_MGT fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style RESULT_COL fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style GCS_CONN fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style RAYLET_CONN fill:#fff8e1,stroke:#f57c00,stroke-width:2px,color:#000
+    style OBJ_STORE_CONN fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</div>
 
 <h2 id="driver-architecture-overview">Driver Architecture Overview</h2>
 <h3 id="high-level-architecture">High-Level Architecture</h3>
 <p>The Ray driver is built on a multi-layered architecture where each layer handles specific aspects of distributed computing:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 Application Layer"
-        USER_CODE["User Python Code<br/>📝 Your business ...</div>
+        USER_CODE["User Python Code<br/>📝 Your business logic"]
+        RAY_DECORATORS["@ray.remote Functions/Classes<br/>🎭 Distributed annotations"]
+    end
+
+    subgraph "🔧 Ray API Layer"
+        RAY_GET["ray.get()<br/>📥 Retrieve results"]
+        RAY_PUT["ray.put()<br/>📤 Store objects"]
+        RAY_WAIT["ray.wait()<br/>⏳ Wait for completion"]
+        RAY_REMOTE["ray.remote()<br/>🚀 Submit work"]
+    end
+
+    subgraph "🧠 Core Worker Layer"
+        TASK_MANAGER["Task Manager<br/>📋 Track submissions"]
+        ACTOR_MANAGER["Actor Manager<br/>🎭 Lifecycle management"]
+        OBJECT_MANAGER["Object Manager<br/>💾 Reference tracking"]
+        REF_COUNTER["Reference Counter<br/>🔢 Memory management"]
+    end
+
+    subgraph "🌐 Transport Layer"
+        RPC_CLIENT["RPC Client<br/>📞 Remote calls"]
+        SERIALIZER["Serialization<br/>📦 Data encoding"]
+        CORE_WORKER_CLIENT["CoreWorker Client<br/>🔗 Internal communication"]
+    end
+
+    subgraph "🏛️ Cluster Services"
+        GCS["Global Control Service<br/>🏛️ Cluster metadata"]
+        RAYLET["Raylet<br/>🔧 Local scheduling"]
+        OBJECT_STORE["Object Store<br/>💿 Distributed storage"]
+    end
+
+    USER_CODE --> RAY_DECORATORS
+    RAY_DECORATORS --> RAY_GET
+    RAY_DECORATORS --> RAY_PUT
+    RAY_DECORATORS --> RAY_WAIT
+    RAY_DECORATORS --> RAY_REMOTE
+
+    RAY_GET --> TASK_MANAGER
+    RAY_PUT --> OBJECT_MANAGER
+    RAY_WAIT --> TASK_MANAGER
+    RAY_REMOTE --> TASK_MANAGER
+    RAY_REMOTE --> ACTOR_MANAGER
+
+    TASK_MANAGER --> RPC_CLIENT
+    ACTOR_MANAGER --> RPC_CLIENT
+    OBJECT_MANAGER --> SERIALIZER
+    REF_COUNTER --> CORE_WORKER_CLIENT
+
+    RPC_CLIENT --> GCS
+    RPC_CLIENT --> RAYLET
+    SERIALIZER --> OBJECT_STORE
+    CORE_WORKER_CLIENT --> RAYLET
+
+    style USER_CODE fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style RAY_DECORATORS fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style TASK_MANAGER fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style ACTOR_MANAGER fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style OBJECT_MANAGER fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style GCS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style RAYLET fill:#fff8e1,stroke:#f57c00,stroke-width:2px,color:#000
+    style OBJECT_STORE fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</div>
 
 <h3 id="core-components-deep-dive">Core Components Deep Dive</h3>
 <h4 id="1-coreworker-the-heart-of-the-driver">1. CoreWorker - The Heart of the Driver</h4>
@@ -1883,10 +2195,31 @@ task_queue_size = Counter(
 <h2 id="driver-lifecycle-deep-dive">Driver Lifecycle Deep Dive</h2>
 <h3 id="phase-1-initialization-rayinit">Phase 1: Initialization (<code>ray.init()</code>)</h3>
 <p>When you call <code>ray.init()</code>, a complex initialization sequence begins:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant U as User Script
     participant API as Ray API
-    participant CW a...</div>
+    participant CW as CoreWorker
+    participant GCS as Global Control Service
+    participant R as Local Raylet
+    participant OS as Object Store
+
+    U->>API: ray.init()
+    Note over API: Parse configuration options
+    API->>CW: Create CoreWorker instance
+    CW->>GCS: Connect to GCS
+    GCS-->>CW: Return cluster metadata
+    CW->>R: Connect to local raylet
+    R-->>CW: Return worker registration
+    CW->>OS: Connect to object store
+    OS-->>CW: Return object store handle
+    CW->>GCS: Register as driver
+    GCS-->>CW: Assign WorkerID
+    CW-->>API: Initialization complete
+    API-->>U: Ready for distributed computing
+
+    Note over U,OS: Driver is now fully initialized and connected
+</div>
 
 <p><strong>Detailed Initialization Steps</strong>:</p>
 <ol>
@@ -1940,9 +2273,47 @@ def init(address=None,
 
 <h3 id="phase-2-task-and-actor-submission">Phase 2: Task and Actor Submission</h3>
 <h4 id="task-submission-flow">Task Submission Flow</h4>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "🎯 Python Level"
-        FUNC_CALL["Function Call<br/>result = f.remote(args)"...</div>
+        FUNC_CALL["Function Call<br/>result = f.remote(args)"]
+        RAY_GET["ray.get(result)<br/>Retrieve value"]
+    end
+
+    subgraph "🔧 Ray API Layer"
+        REMOTE_FUNC["RemoteFunction<br/>Decorated function wrapper"]
+        TASK_SPEC["TaskSpec Creation<br/>Serialize function + args"]
+    end
+
+    subgraph "🧠 CoreWorker"
+        TASK_MANAGER["TaskManager<br/>Track pending tasks"]
+        RPC_CLIENT["RPC Client<br/>Send to raylet"]
+        OBJ_MANAGER["ObjectManager<br/>Handle return refs"]
+    end
+
+    subgraph "🌐 Cluster Services"
+        RAYLET["Raylet Scheduler<br/>Find worker"]
+        WORKER["Worker Process<br/>Execute task"]
+        OBJECT_STORE["Object Store<br/>Store results"]
+    end
+
+    FUNC_CALL --> REMOTE_FUNC
+    REMOTE_FUNC --> TASK_SPEC
+    TASK_SPEC --> TASK_MANAGER
+    TASK_MANAGER --> RPC_CLIENT
+    RPC_CLIENT --> RAYLET
+    RAYLET --> WORKER
+    WORKER --> OBJECT_STORE
+    OBJECT_STORE --> OBJ_MANAGER
+    OBJ_MANAGER --> RAY_GET
+
+    style FUNC_CALL fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style TASK_SPEC fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style TASK_MANAGER fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style RAYLET fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style WORKER fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style OBJECT_STORE fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</div>
 
 <p><strong>Code Deep Dive - Task Submission</strong>:</p>
 <pre><code class="cpp">// From src/ray/core_worker/core_worker.cc
@@ -1992,10 +2363,45 @@ Status CoreWorker::SubmitTask(const RayFunction &amp;function,
 <h3 id="phase-3-result-collection-and-object-management">Phase 3: Result Collection and Object Management</h3>
 <h4 id="object-reference-system">Object Reference System</h4>
 <p>Ray uses a sophisticated object reference system where the driver tracks references to distributed objects:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 Driver Process"
         USER_REF["ObjectRef<br/>🏷️ User's handle"]
-        ...</div>
+        REF_COUNTER["Reference Counter<br/>🔢 Track usage"]
+        OBJ_MANAGER["Object Manager<br/>💾 Local tracking"]
+    end
+
+    subgraph "🌐 Distributed Storage"
+        OBJ_STORE_1["Object Store 1<br/>💿 Node A storage"]
+        OBJ_STORE_2["Object Store 2<br/>💿 Node B storage"]
+        OBJ_STORE_3["Object Store 3<br/>💿 Node C storage"]
+    end
+
+    subgraph "🏛️ Global Tracking"
+        GCS_OBJ_MGR["GCS Object Manager<br/>🗂️ Global object directory"]
+        OWNER_INFO["Owner Information<br/>👤 Who created object"]
+        LOCATION_INFO["Location Information<br/>📍 Where object lives"]
+    end
+
+    USER_REF --> REF_COUNTER
+    REF_COUNTER --> OBJ_MANAGER
+    OBJ_MANAGER --> GCS_OBJ_MGR
+
+    GCS_OBJ_MGR --> OWNER_INFO
+    GCS_OBJ_MGR --> LOCATION_INFO
+
+    LOCATION_INFO --> OBJ_STORE_1
+    LOCATION_INFO --> OBJ_STORE_2
+    LOCATION_INFO --> OBJ_STORE_3
+
+    style USER_REF fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style REF_COUNTER fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style OBJ_MANAGER fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style GCS_OBJ_MGR fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style OBJ_STORE_1 fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style OBJ_STORE_2 fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+    style OBJ_STORE_3 fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+</div>
 
 <h3 id="phase-4-cleanup-and-shutdown">Phase 4: Cleanup and Shutdown</h3>
 <p>When the driver shuts down, it must carefully clean up all distributed resources:</p>
@@ -2026,10 +2432,27 @@ def shutdown(verbose=True):
 <p>The Ray driver uses multiple communication channels optimized for different types of operations:</p>
 <h3 id="1-driver-to-gcs-communication">1. Driver-to-GCS Communication</h3>
 <p><strong>Purpose</strong>: Cluster metadata, actor lifecycle, job management</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant D as Driver
     participant GCS as GCS Server
-    participant DB as ...</div>
+    participant DB as Metadata Store
+
+    Note over D,DB: Actor Creation
+    D->>GCS: CreateActor request
+    GCS->>DB: Store actor metadata
+    GCS-->>D: Actor created (ActorID)
+
+    Note over D,DB: Global State Queries
+    D->>GCS: Get cluster resources
+    GCS->>DB: Query resource state
+    GCS-->>D: Resource availability
+
+    Note over D,DB: Job Management
+    D->>GCS: Submit job metadata
+    GCS->>DB: Store job info
+    GCS-->>D: Job registered
+</div>
 
 <p><strong>Code Example - GCS Client</strong>:</p>
 <pre><code class="cpp">// From src/ray/gcs/gcs_client/gcs_client.h
@@ -2060,9 +2483,45 @@ class GcsClient {
 
 <h3 id="2-driver-to-raylet-communication">2. Driver-to-Raylet Communication</h3>
 <p><strong>Purpose</strong>: Task submission, resource requests, local scheduling</p>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "🎯 Driver Operations"
-        SUBMIT_TASK["Submit Task<br/>📋 Function + Args"]...</div>
+        SUBMIT_TASK["Submit Task<br/>📋 Function + Args"]
+        REQUEST_WORKER["Request Worker<br/>👤 Need execution slot"]
+        GET_OBJECT["Get Object<br/>📥 Retrieve data"]
+    end
+
+    subgraph "🔧 Raylet Services"
+        SCHEDULER["Task Scheduler<br/>⚖️ Find worker"]
+        WORKER_POOL["Worker Pool<br/>👥 Manage processes"]
+        OBJ_MGR["Object Manager<br/>💾 Local objects"]
+    end
+
+    subgraph "📞 Communication Layer"
+        RPC_CHANNEL["gRPC Channel<br/>🔗 Persistent connection"]
+        TASK_QUEUE["Task Queue<br/>📬 Pending work"]
+        CALLBACK_MGR["Callback Manager<br/>📞 Async responses"]
+    end
+
+    SUBMIT_TASK --> RPC_CHANNEL
+    REQUEST_WORKER --> RPC_CHANNEL
+    GET_OBJECT --> RPC_CHANNEL
+
+    RPC_CHANNEL --> SCHEDULER
+    RPC_CHANNEL --> WORKER_POOL
+    RPC_CHANNEL --> OBJ_MGR
+
+    SCHEDULER --> TASK_QUEUE
+    WORKER_POOL --> CALLBACK_MGR
+    OBJ_MGR --> CALLBACK_MGR
+
+    style SUBMIT_TASK fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style REQUEST_WORKER fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style GET_OBJECT fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style SCHEDULER fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style WORKER_POOL fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style OBJ_MGR fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</div>
 
 <h3 id="3-driver-to-object-store-communication">3. Driver-to-Object Store Communication</h3>
 <p><strong>Purpose</strong>: High-bandwidth data transfer, shared memory access</p>
@@ -2112,10 +2571,34 @@ class PlasmaClient {
 <h2 id="driver-gcs-integration">Driver-GCS Integration</h2>
 <p>The Global Control Service (GCS) acts as the cluster's "central nervous system" and the driver maintains a close relationship with it:</p>
 <h3 id="actor-lifecycle-management">Actor Lifecycle Management</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant D as Driver
     participant GCS as GCS Server
-    participant SM as ...</div>
+    participant SM as State Manager
+    participant R as Raylet
+    participant W as Worker
+
+    Note over D,W: Actor Creation Flow
+    D->>GCS: CreateActor(class, args, resources)
+    GCS->>SM: Store actor metadata
+    GCS->>R: Schedule actor placement
+    R->>W: Start worker process
+    W->>GCS: Register actor ready
+    GCS-->>D: Return ActorHandle
+
+    Note over D,W: Actor Method Calls
+    D->>R: Submit actor task
+    R->>W: Execute method
+    W-->>R: Return result
+    R-->>D: Task complete
+
+    Note over D,W: Actor Death Handling
+    W->>GCS: Actor died notification
+    GCS->>SM: Update actor state
+    GCS->>D: Notify actor dead
+    D->>D: Clean up actor handle
+</div>
 
 <h3 id="job-management-and-driver-registration">Job Management and Driver Registration</h3>
 <pre><code class="cpp">// From src/ray/gcs/gcs_server/gcs_job_manager.h
@@ -2276,23 +2759,138 @@ ray memory --stats-only
 <p><strong>Fault Tolerance</strong>: If a task fails, Ray can automatically retry it on different machines, ensuring your computation completes even in the face of hardware failures.</p>
 <p><strong>Efficient Data Sharing</strong>: Tasks can share large datasets efficiently through Ray's distributed object store without copying data unnecessarily.</p>
 <h3 id="core-task-concepts">Core Task Concepts</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "📋 Task Lifecycle"
-        SUBMISSION["Task Submission<br/>📤 Driver calls remo...</div>
+        SUBMISSION["Task Submission<br/>📤 Driver calls remote function"]
+        SCHEDULING["Task Scheduling<br/>⚖️ Find suitable worker"]
+        EXECUTION["Task Execution<br/>⚡ Run function logic"]
+        COMPLETION["Task Completion<br/>✅ Store results"]
+    end
+
+    subgraph "🔧 Task Components"
+        TASK_SPEC["Task Specification<br/>📋 Function + arguments"]
+        OBJECT_REFS["Object References<br/>🏷️ Future results"]
+        DEPENDENCIES["Dependencies<br/>🔗 Input requirements"]
+        RESOURCES["Resource Requirements<br/>💰 CPU/GPU/Memory"]
+    end
+
+    subgraph "🌐 Execution Context"
+        WORKER_PROCESS["Worker Process<br/>🔧 Isolated execution"]
+        OBJECT_STORE["Object Store<br/>💿 Shared data"]
+        TASK_MANAGER["Task Manager<br/>📊 Lifecycle tracking"]
+    end
+
+    SUBMISSION --> SCHEDULING
+    SCHEDULING --> EXECUTION
+    EXECUTION --> COMPLETION
+
+    TASK_SPEC --> WORKER_PROCESS
+    OBJECT_REFS --> OBJECT_STORE
+    DEPENDENCIES --> TASK_MANAGER
+    RESOURCES --> WORKER_PROCESS
+
+    style SUBMISSION fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style EXECUTION fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px,color:#000
+    style TASK_SPEC fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style WORKER_PROCESS fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+</div>
 
 <h2 id="task-architecture-overview">Task Architecture Overview</h2>
 <h3 id="high-level-task-system-architecture">High-Level Task System Architecture</h3>
 <p>Ray's task system is built on multiple layers that handle different aspects of distributed task execution:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 Application Layer"
-        USER_FUNC["@ray.remote Function<br/>📝 User-defin...</div>
+        USER_FUNC["@ray.remote Function<br/>📝 User-defined computation"]
+        REMOTE_CALL["Function.remote()<br/>📞 Asynchronous invocation"]
+        RAY_GET["ray.get()<br/>📥 Result retrieval"]
+    end
+
+    subgraph "🔧 Ray API Layer"
+        TASK_FACTORY["Task Factory<br/>🏗️ Task specification creation"]
+        OBJECT_MGR["Object Manager<br/>🏷️ Reference tracking"]
+        SERIALIZER["Serialization<br/>📦 Data encoding"]
+    end
+
+    subgraph "�� Core Worker Layer"
+        TASK_SUBMITTER["Task Submitter<br/>📋 Dispatch coordination"]
+        DEPENDENCY_MGR["Dependency Manager<br/>🔗 Input resolution"]
+        RESULT_MGR["Result Manager<br/>📊 Output handling"]
+    end
+
+    subgraph "🌐 Cluster Services"
+        TASK_SCHEDULER["Task Scheduler<br/>⚖️ Worker selection"]
+        RAYLET["Raylet<br/>🔧 Local coordination"]
+        WORKER_POOL["Worker Pool<br/>👥 Process management"]
+    end
+
+    subgraph "⚡ Execution Layer"
+        WORKER_PROCESS["Worker Process<br/>🎯 Task execution"]
+        FUNCTION_RUNTIME["Function Runtime<br/>⚙️ Python execution"]
+        OBJECT_STORE["Object Store<br/>💿 Data storage"]
+    end
+
+    USER_FUNC --> TASK_FACTORY
+    REMOTE_CALL --> OBJECT_MGR
+    RAY_GET --> SERIALIZER
+
+    TASK_FACTORY --> TASK_SUBMITTER
+    OBJECT_MGR --> DEPENDENCY_MGR
+    SERIALIZER --> RESULT_MGR
+
+    TASK_SUBMITTER --> TASK_SCHEDULER
+    DEPENDENCY_MGR --> RAYLET
+    RESULT_MGR --> WORKER_POOL
+
+    TASK_SCHEDULER --> WORKER_PROCESS
+    RAYLET --> FUNCTION_RUNTIME
+    WORKER_POOL --> OBJECT_STORE
+
+    style USER_FUNC fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style REMOTE_CALL fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style TASK_SUBMITTER fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style TASK_SCHEDULER fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style WORKER_PROCESS fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+</div>
 
 <h3 id="task-vs-actor-comparison">Task vs Actor Comparison</h3>
 <p>Understanding the differences between tasks and actors is crucial for designing Ray applications:</p>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "📋 Task Model"
         TASK_STATELESS["Stateless<br/>🔄 No persistent memory"]
-...</div>
+        TASK_IMMUTABLE["Immutable<br/>🔒 Cannot change state"]
+        TASK_PARALLEL["Massively Parallel<br/>⚡ Unlimited instances"]
+        TASK_EPHEMERAL["Ephemeral<br/>⏰ Short-lived execution"]
+    end
+
+    subgraph "🎭 Actor Model"
+        ACTOR_STATEFUL["Stateful<br/>💾 Persistent memory"]
+        ACTOR_MUTABLE["Mutable<br/>🔧 Can change state"]
+        ACTOR_SEQUENTIAL["Sequential<br/>📋 Ordered execution"]
+        ACTOR_PERSISTENT["Persistent<br/>🏠 Long-lived process"]
+    end
+
+    subgraph "🎯 Use Cases"
+        BATCH_PROCESSING["Batch Processing<br/>📊 Data transformation"]
+        STREAMING["Streaming Computation<br/>🌊 Real-time processing"]
+        STATEFUL_SERVICE["Stateful Services<br/>🏪 Databases, caches"]
+        COORDINATION["Coordination<br/>🤝 System orchestration"]
+    end
+
+    TASK_STATELESS --> BATCH_PROCESSING
+    TASK_PARALLEL --> STREAMING
+    ACTOR_STATEFUL --> STATEFUL_SERVICE
+    ACTOR_PERSISTENT --> COORDINATION
+
+    style TASK_STATELESS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style TASK_PARALLEL fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style ACTOR_STATEFUL fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style ACTOR_PERSISTENT fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style BATCH_PROCESSING fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style STATEFUL_SERVICE fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+</div>
 
 <h2 id="task-creation-and-submission">Task Creation and Submission</h2>
 <h3 id="phase-1-function-registration">Phase 1: Function Registration</h3>
@@ -2350,10 +2948,25 @@ def make_function_remote(function, num_cpus, num_gpus, memory, **kwargs):
 
 <h3 id="phase-2-task-specification-creation">Phase 2: Task Specification Creation</h3>
 <p>When you call <code>function.remote()</code>, Ray creates a detailed task specification:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant U as User Code
     participant RF as RemoteFunction
-    participant ...</div>
+    participant CW as CoreWorker
+    participant TS as TaskSubmitter
+    participant GCS as GCS
+    participant R as Raylet
+
+    U->>RF: process_data.remote(chunk, params)
+    RF->>CW: Create task specification
+    CW->>TS: Build TaskSpec with metadata
+    TS->>GCS: Register task dependencies
+    GCS->>R: Forward to appropriate raylet
+    R->>R: Queue task for scheduling
+    RF-->>U: Return ObjectRef immediately
+
+    Note over U,R: Task is now in the system pipeline
+</div>
 
 <p><strong>Detailed Task Specification Code</strong>:</p>
 <pre><code class="cpp">// From src/ray/core_worker/core_worker.cc
@@ -2468,10 +3081,43 @@ std::unique_ptr&lt;TaskArg&gt; CreateTaskArg(const py::object &amp;obj) {
 <h2 id="task-scheduling-and-placement">Task Scheduling and Placement</h2>
 <h3 id="cluster-level-task-scheduling">Cluster-Level Task Scheduling</h3>
 <p>Ray's task scheduler makes intelligent decisions about where to run tasks:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "📊 Scheduling Inputs"
         TASK_QUEUE["Task Queue<br/>📋 Pending work"]
-    ...</div>
+        RESOURCE_REQ["Resource Requirements<br/>💰 CPU/GPU/Memory"]
+        NODE_STATE["Node State<br/>🖥️ Available resources"]
+        LOCALITY["Data Locality<br/>📍 Input object locations"]
+    end
+
+    subgraph "🧠 Scheduling Logic"
+        RESOURCE_MATCHING["Resource Matching<br/>⚖️ Can node handle task?"]
+        LOAD_BALANCING["Load Balancing<br/>📊 Distribute work evenly"]
+        LOCALITY_OPT["Locality Optimization<br/>🎯 Minimize data movement"]
+        PRIORITY_HANDLING["Priority Handling<br/>🔝 Critical tasks first"]
+    end
+
+    subgraph "🎯 Scheduling Decisions"
+        NODE_SELECTION["Node Selection<br/>🖥️ Best fit worker"]
+        RESOURCE_ALLOCATION["Resource Allocation<br/>🔒 Reserve capacity"]
+        TASK_DISPATCH["Task Dispatch<br/>📤 Send to worker"]
+    end
+
+    TASK_QUEUE --> RESOURCE_MATCHING
+    RESOURCE_REQ --> RESOURCE_MATCHING
+    NODE_STATE --> LOAD_BALANCING
+    LOCALITY --> LOCALITY_OPT
+
+    RESOURCE_MATCHING --> NODE_SELECTION
+    LOAD_BALANCING --> NODE_SELECTION
+    LOCALITY_OPT --> RESOURCE_ALLOCATION
+    PRIORITY_HANDLING --> TASK_DISPATCH
+
+    style TASK_QUEUE fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style RESOURCE_MATCHING fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style NODE_SELECTION fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style TASK_DISPATCH fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+</div>
 
 <h3 id="local-task-scheduling-raylet">Local Task Scheduling (Raylet)</h3>
 <p>Once a task arrives at a raylet, local scheduling decisions are made:</p>
@@ -2518,17 +3164,71 @@ void LocalTaskManager::SchedulePendingTasks() {
 
 <h3 id="intelligent-worker-selection">Intelligent Worker Selection</h3>
 <p>The scheduler considers multiple factors when selecting workers:</p>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "🎯 Selection Criteria"
-        RESOURCE_FIT["Resource Fit<br/>✅ Has required C...</div>
+        RESOURCE_FIT["Resource Fit<br/>✅ Has required CPU/GPU"]
+        CURRENT_LOAD["Current Load<br/>📊 Worker utilization"]
+        DATA_LOCALITY["Data Locality<br/>📍 Input object location"]
+        WORKER_TYPE["Worker Type<br/>🔧 Language compatibility"]
+    end
+
+    subgraph "⚖️ Scoring Algorithm"
+        RESOURCE_SCORE["Resource Score<br/>💯 0-100 based on fit"]
+        LOCALITY_SCORE["Locality Score<br/>💯 0-100 based on data"]
+        LOAD_SCORE["Load Score<br/>💯 0-100 based on utilization"]
+        COMPOSITE_SCORE["Composite Score<br/>🎯 Weighted combination"]
+    end
+
+    subgraph "🏆 Final Decision"
+        BEST_WORKER["Best Worker<br/>👑 Highest scoring worker"]
+        FALLBACK["Fallback<br/>🔄 Alternative if first choice fails"]
+        QUEUING["Queuing<br/>⏳ Wait if no suitable worker"]
+    end
+
+    RESOURCE_FIT --> RESOURCE_SCORE
+    CURRENT_LOAD --> LOAD_SCORE
+    DATA_LOCALITY --> LOCALITY_SCORE
+    WORKER_TYPE --> COMPOSITE_SCORE
+
+    RESOURCE_SCORE --> COMPOSITE_SCORE
+    LOCALITY_SCORE --> COMPOSITE_SCORE
+    LOAD_SCORE --> COMPOSITE_SCORE
+
+    COMPOSITE_SCORE --> BEST_WORKER
+    BEST_WORKER --> FALLBACK
+    FALLBACK --> QUEUING
+
+    style RESOURCE_FIT fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style DATA_LOCALITY fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style COMPOSITE_SCORE fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style BEST_WORKER fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000
+</div>
 
 <h2 id="task-execution-engine">Task Execution Engine</h2>
 <h3 id="worker-process-task-execution">Worker Process Task Execution</h3>
 <p>Once a task is assigned to a worker, a sophisticated execution engine takes over:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant R as Raylet
     participant W as Worker Process
-    participant TE a...</div>
+    participant TE as Task Executor
+    participant OS as Object Store
+    participant F as Function Runtime
+
+    R->>W: Assign task
+    W->>TE: Initialize task execution
+    TE->>OS: Resolve input dependencies
+    OS-->>TE: Return input objects
+    TE->>F: Execute user function
+    F->>F: Run Python code
+    F-->>TE: Return result
+    TE->>OS: Store result objects
+    TE->>W: Mark task complete
+    W->>R: Report task success
+
+    Note over R,F: Task execution with dependency resolution
+</div>
 
 <p><strong>Task Execution Implementation</strong>:</p>
 <pre><code class="python"># From python/ray/_private/worker.py (worker process)
@@ -2637,9 +3337,47 @@ print(f&quot;Final model accuracy: {ray.get(final_accuracy)}&quot;)
 <h2 id="task-dependencies-and-lineage">Task Dependencies and Lineage</h2>
 <h3 id="dependency-graph-management">Dependency Graph Management</h3>
 <p>Ray maintains a sophisticated dependency graph for tasks:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "📊 Data Sources"
-        FILE1["load_data('train.csv')<br/>📄 Raw training data...</div>
+        FILE1["load_data('train.csv')<br/>📄 Raw training data"]
+        FILE2["load_data('test.csv')<br/>📄 Raw test data"]
+        FILE3["load_data('validation.csv')<br/>📄 Raw validation data"]
+    end
+
+    subgraph "🧹 Preprocessing"
+        CLEAN1["preprocess_data(train)<br/>🧹 Clean training data"]
+        CLEAN2["preprocess_data(test)<br/>🧹 Clean test data"]
+        CLEAN3["preprocess_data(val)<br/>🧹 Clean validation data"]
+    end
+
+    subgraph "🤖 Model Training"
+        TRAIN["train_model(clean_train, clean_test)<br/>🤖 Trained model"]
+    end
+
+    subgraph "📊 Evaluation"
+        EVAL["evaluate_model(model, clean_val)<br/>📊 Final accuracy"]
+    end
+
+    FILE1 --> CLEAN1
+    FILE2 --> CLEAN2
+    FILE3 --> CLEAN3
+
+    CLEAN1 --> TRAIN
+    CLEAN2 --> TRAIN
+
+    TRAIN --> EVAL
+    CLEAN3 --> EVAL
+
+    style FILE1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style FILE2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style FILE3 fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style CLEAN1 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style CLEAN2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style CLEAN3 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style TRAIN fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style EVAL fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+</div>
 
 <h3 id="lineage-tracking-and-fault-tolerance">Lineage Tracking and Fault Tolerance</h3>
 <p>Ray tracks the complete lineage of objects to enable fault tolerance:</p>
@@ -2714,16 +3452,61 @@ class ReferenceCounter {
 <p><strong>Stateful Distributed Computing</strong>: Unlike functions that are stateless, actors maintain state between calls. Imagine having a database connection, machine learning model, or game state that persists across multiple operations.</p>
 <p><strong>Location Transparency</strong>: You interact with actors using handles that look like regular Python objects, even though the actor might be running on a machine thousands of miles away.</p>
 <h3 id="core-actor-concepts">Core Actor Concepts</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎭 Actor Lifecycle"
-        CREATION["Actor Creation<br/>🏗️ Spawn new process"...</div>
+        CREATION["Actor Creation<br/>🏗️ Spawn new process"]
+        INITIALIZATION["Initialization<br/>🚀 Run __init__ method"]
+        READY["Ready State<br/>✅ Accept method calls"]
+        EXECUTION["Method Execution<br/>⚡ Process requests"]
+        TERMINATION["Termination<br/>💀 Cleanup and exit"]
+    end
+
+    CREATION --> INITIALIZATION
+    INITIALIZATION --> READY
+    READY --> EXECUTION
+    EXECUTION --> READY
+    EXECUTION --> TERMINATION
+
+    style CREATION fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style READY fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px,color:#000
+</div>
 
 <h2 id="actor-architecture-overview">Actor Architecture Overview</h2>
 <h3 id="high-level-actor-system-architecture">High-Level Actor System Architecture</h3>
 <p>Ray's actor system is built on several layers that work together to provide the illusion of stateful, distributed objects:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 User Level"
-        ACTOR_CLASS["@ray.remote Actor Class<br/>📝 User-defined...</div>
+        ACTOR_CLASS["@ray.remote Actor Class<br/>📝 User-defined behavior"]
+        ACTOR_HANDLE["Actor Handle<br/>🎭 Remote object reference"]
+        METHOD_CALLS["Method Calls<br/>📞 actor.method.remote()"]
+    end
+
+    subgraph "🧠 Core Worker Layer"
+        ACTOR_MGR["Actor Manager<br/>🎭 Lifecycle coordination"]
+        TASK_SUBMITTER["Task Submitter<br/>📋 Method dispatching"]
+        REF_COUNTER["Reference Counter<br/>🔢 Garbage collection"]
+    end
+
+    subgraph "🌐 Cluster Services"
+        GCS_ACTOR_MGR["GCS Actor Manager<br/>🏛️ Global state"]
+        ACTOR_SCHEDULER["Actor Scheduler<br/>⚖️ Placement decisions"]
+        RAYLET_MGR["Raylet Manager<br/>🔧 Local execution"]
+    end
+
+    ACTOR_CLASS --> ACTOR_MGR
+    ACTOR_HANDLE --> TASK_SUBMITTER
+    METHOD_CALLS --> REF_COUNTER
+
+    ACTOR_MGR --> GCS_ACTOR_MGR
+    TASK_SUBMITTER --> ACTOR_SCHEDULER
+    REF_COUNTER --> RAYLET_MGR
+
+    style ACTOR_CLASS fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style ACTOR_HANDLE fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style ACTOR_MGR fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+</div>
 
 <h2 id="actor-creation-deep-dive">Actor Creation Deep Dive</h2>
 <h3 id="phase-1-actor-definition-and-registration">Phase 1: Actor Definition and Registration</h3>
@@ -2770,10 +3553,26 @@ def make_actor(cls, num_cpus, num_gpus, memory, **kwargs):
 
 <h3 id="phase-2-actor-instance-creation">Phase 2: Actor Instance Creation</h3>
 <p>When you call <code>ClassName.remote()</code>, a complex creation process begins:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant U as User Code
     participant API as Ray API
-    participant CW as ...</div>
+    participant CW as CoreWorker
+    participant GCS as GCS Server
+    participant R as Raylet
+    participant AW as Actor Worker
+
+    U->>API: GameServer.remote(max_players=50)
+    API->>CW: Create actor request
+    CW->>GCS: Submit actor creation task
+    GCS->>R: Assign actor to node
+    R->>AW: Start actor worker process
+    AW->>AW: Initialize actor instance
+    AW->>GCS: Register actor as ready
+    GCS->>CW: Return actor handle
+    CW->>API: Return ActorHandle
+    API->>U: Return game_server handle
+</div>
 
 <p><strong>Detailed Actor Creation Code</strong>:</p>
 <pre><code class="cpp">// From src/ray/core_worker/core_worker.cc
@@ -2805,10 +3604,27 @@ Status CoreWorker::CreateActor(const RayFunction &amp;function,
 <h2 id="method-invocation-and-execution">Method Invocation and Execution</h2>
 <h3 id="method-call-flow">Method Call Flow</h3>
 <p>When you call a method on an actor handle, a sophisticated routing and execution process occurs:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant C as Client Code
     participant H as Actor Handle
-    participant C...</div>
+    participant CW as CoreWorker
+    participant R as Raylet
+    participant AW as Actor Worker
+    participant A as Actor Instance
+
+    C->>H: game_server.add_player.remote(id, data)
+    H->>CW: Submit actor task
+    CW->>R: Route to actor's raylet
+    R->>AW: Forward method call
+    AW->>A: Invoke add_player(id, data)
+    A->>A: Execute method logic
+    A-->>AW: Return result
+    AW-->>R: Send result
+    R-->>CW: Return object reference
+    CW-->>H: Return ObjectRef
+    H-->>C: Return future result
+</div>
 
 <h3 id="method-execution-engine">Method Execution Engine</h3>
 <p>Inside the actor worker, methods are executed by a specialized runtime:</p>
@@ -2866,10 +3682,36 @@ class FaultTolerantActor:
 </code></pre>
 
 <h3 id="failure-detection-and-recovery">Failure Detection and Recovery</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant C as Client
     participant H as Actor Handle
-    participant GCS as...</div>
+    participant GCS as GCS Server
+    participant HM as Health Monitor
+    participant R as Raylet
+    participant AW as Actor Worker
+
+    Note over C,AW: Normal Operation
+    C->>H: Method call
+    H->>AW: Execute method
+    AW-->>H: Return result
+
+    Note over C,AW: Failure Detection
+    HM->>AW: Health check
+    AW->>AW: ❌ Process crash
+    HM->>GCS: Report actor death
+    GCS->>GCS: Check restart policy
+
+    Note over C,AW: Recovery Process
+    GCS->>R: Start new actor instance
+    R->>AW: Launch new worker
+    AW->>GCS: Register as ready
+
+    Note over C,AW: Resume Operation
+    C->>H: Retry method call
+    H->>AW: Execute on new instance
+    AW-->>H: Return result
+</div>
 
 <p>This comprehensive guide covers the fundamental aspects of Ray's actor system. Actors provide a powerful abstraction for building stateful, distributed applications with strong consistency guarantees and fault tolerance features. </p>
 
@@ -2886,9 +3728,48 @@ class FaultTolerantActor:
 <p><strong>Location Transparency</strong>: Your code doesn't need to know where data is physically stored.</p>
 <p><strong>Fault Tolerance</strong>: Objects can be reconstructed if they're lost due to node failures.</p>
 <h2 id="architecture-overview">Architecture Overview</h2>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 User Interface"
-        OBJECT_REF["ObjectRef<br/>🏷️ Smart pointer to data"...</div>
+        OBJECT_REF["ObjectRef<br/>🏷️ Smart pointer to data"]
+        RAY_GET["ray.get()<br/>📥 Retrieve object value"]
+        RAY_PUT["ray.put()<br/>📤 Store object in cluster"]
+    end
+
+    subgraph "🧠 Reference Management"
+        REF_COUNTER["Reference Counter<br/>🔢 Track object usage"]
+        OWNERSHIP["Ownership Tracking<br/>👤 Who owns what"]
+        LINEAGE["Lineage Tracking<br/>🔗 How objects were created"]
+    end
+
+    subgraph "💾 Distributed Storage"
+        OBJECT_STORE_1["Object Store 1<br/>💿 Node A storage"]
+        OBJECT_STORE_2["Object Store 2<br/>💿 Node B storage"]
+        OBJECT_STORE_3["Object Store 3<br/>💿 Node C storage"]
+    end
+
+    subgraph "🏛️ Global Coordination"
+        GCS_OBJECT_MGR["GCS Object Manager<br/>🗂️ Global object directory"]
+        LOCATION_SERVICE["Location Service<br/>📍 Where is each object?"]
+    end
+
+    OBJECT_REF --> REF_COUNTER
+    RAY_GET --> OWNERSHIP
+    RAY_PUT --> LINEAGE
+
+    REF_COUNTER --> GCS_OBJECT_MGR
+    OWNERSHIP --> LOCATION_SERVICE
+    LINEAGE --> OBJECT_STORE_1
+
+    GCS_OBJECT_MGR --> OBJECT_STORE_1
+    LOCATION_SERVICE --> OBJECT_STORE_2
+    OBJECT_STORE_1 --> OBJECT_STORE_3
+
+    style OBJECT_REF fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    style REF_COUNTER fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style OBJECT_STORE_1 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style GCS_OBJECT_MGR fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+</div>
 
 <h2 id="object-references-objectrefs">Object References (ObjectRefs)</h2>
 <h3 id="what-is-an-objectref">What is an ObjectRef?</h3>
@@ -2915,10 +3796,35 @@ print(f&quot;Retrieved array shape: {retrieved_array.shape}&quot;)
 </code></pre>
 
 <h3 id="objectref-lifecycle">ObjectRef Lifecycle</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant U as User Code
     participant CW as CoreWorker
-    participant OS a...</div>
+    participant OS as Object Store
+    participant GCS as GCS
+    participant RC as Reference Counter
+
+    U->>CW: ray.put(large_data)
+    CW->>OS: Store object
+    OS-->>CW: Return ObjectID
+    CW->>GCS: Register object metadata
+    CW->>RC: Add reference count
+    CW-->>U: Return ObjectRef
+
+    Note over U,RC: Object is now stored and tracked
+
+    U->>CW: ray.get(object_ref)
+    CW->>OS: Retrieve object
+    OS-->>CW: Return object data
+    CW-->>U: Return actual data
+
+    Note over U,RC: When ObjectRef goes out of scope...
+
+    U->>RC: Reference deleted
+    RC->>RC: Decrement count
+    RC->>GCS: Count reached zero
+    GCS->>OS: Delete object
+</div>
 
 <h3 id="automatic-object-creation">Automatic Object Creation</h3>
 <p>Objects are automatically stored when returned from remote functions:</p>
@@ -2981,10 +3887,44 @@ class PlasmaClient {
 </code></pre>
 
 <h3 id="multi-node-object-access">Multi-Node Object Access</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🖥️ Node A"
         TASK_A["Task A<br/>Creates large_data"]
-        STORE_A["O...</div>
+        STORE_A["Object Store A<br/>💿 Stores large_data"]
+    end
+
+    subgraph "🖥️ Node B"
+        TASK_B["Task B<br/>Needs large_data"]
+        STORE_B["Object Store B<br/>💿 Local cache"]
+    end
+
+    subgraph "🖥️ Node C"  
+        TASK_C["Task C<br/>Also needs large_data"]
+        STORE_C["Object Store C<br/>💿 Local cache"]
+    end
+
+    subgraph "🏛️ Global Directory"
+        GCS_DIR["GCS Object Directory<br/>📍 Tracks object locations"]
+    end
+
+    TASK_A --> STORE_A
+    STORE_A --> GCS_DIR
+
+    TASK_B --> GCS_DIR
+    GCS_DIR --> STORE_A
+    STORE_A --> STORE_B
+    STORE_B --> TASK_B
+
+    TASK_C --> STORE_B
+    STORE_B --> STORE_C
+    STORE_C --> TASK_C
+
+    style TASK_A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style STORE_A fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style GCS_DIR fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style STORE_B fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+</div>
 
 <h2 id="memory-management-patterns">Memory Management Patterns</h2>
 <h3 id="efficient-data-sharing">Efficient Data Sharing</h3>
@@ -3126,10 +4066,24 @@ final_result = ray.get(result3)  # Handles reconstruction transparently
 </code></pre>
 
 <h3 id="reconstruction-process">Reconstruction Process</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant App as Application
     participant GCS as GCS
-    participant Node1 ...</div>
+    participant Node1 as Node 1 (Failed)
+    participant Node2 as Node 2
+    participant RC as Reconstructor
+
+    App->>GCS: ray.get(lost_object_ref)
+    GCS->>GCS: Object not found in cluster
+    GCS->>RC: Reconstruct object using lineage
+    RC->>Node2: Re-run task that created object
+    Node2->>Node2: Execute task
+    Node2->>GCS: Store reconstructed object
+    GCS-->>App: Return reconstructed object
+
+    Note over App,RC: Transparent reconstruction
+</div>
 
 <h2 id="performance-optimization">Performance Optimization</h2>
 <h3 id="object-store-memory-management">Object Store Memory Management</h3>
@@ -3209,10 +4163,69 @@ def pipeline_step2(step1_result_ref):
 <li><strong>Service Discovery</strong>: Provide endpoints for cluster services</li>
 </ol>
 <h2 id="architecture-overview">Architecture Overview</h2>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Ray Cluster Architecture"
         subgraph "GCS Server (Head Node)"
-         ...</div>
+            subgraph "Core Managers"
+                NodeMgr["Node Manager<br/>Node lifecycle & health"]
+                ResourceMgr["Resource Manager<br/>Cluster resources"]
+                ActorMgr["Actor Manager<br/>Actor coordination"]
+                JobMgr["Job Manager<br/>Job lifecycle"]
+                PlacementMgr["Placement Group Manager<br/>Group scheduling"]
+            end
+
+            subgraph "Infrastructure"
+                Storage["Table Storage<br/>Redis/Memory"]
+                PubSub["Pub/Sub System<br/>Event distribution"]
+                RPC["gRPC Server<br/>Client communication"]
+                KVStore["KV Manager<br/>Configuration store"]
+            end
+        end
+
+        subgraph "Worker Nodes"
+            subgraph "Raylet 1"
+                RM1["Resource Manager"]
+                NM1["Node Manager"]
+            end
+            subgraph "Raylet 2"
+                RM2["Resource Manager"]
+                NM2["Node Manager"]
+            end
+        end
+
+        subgraph "External Systems"
+            Redis[(Redis Storage)]
+            Clients["Ray Clients<br/>Drivers & SDKs"]
+            Monitoring["Monitoring<br/>Prometheus/etc"]
+        end
+    end
+
+    NodeMgr <--> RM1
+    NodeMgr <--> RM2
+
+    ResourceMgr <--> RM1
+    ResourceMgr <--> RM2
+
+    ActorMgr <--> NM1
+    ActorMgr <--> NM2
+
+    Storage <--> Redis
+    PubSub <--> Storage
+
+    RPC <--> Clients
+    RPC <--> Monitoring
+
+    NodeMgr <--> Storage
+    ResourceMgr <--> Storage
+    ActorMgr <--> Storage
+    JobMgr <--> Storage
+
+    style NodeMgr fill:#e1f5fe
+    style ResourceMgr fill:#f3e5f5
+    style Storage fill:#e8f5e8
+    style RPC fill:#fff3e0
+</div>
 
 <h3 id="gcs-server-design-principles">GCS Server Design Principles</h3>
 <ol>
@@ -3226,10 +4239,36 @@ def pipeline_step2(step1_result_ref):
 <p>The GCS server consists of several specialized managers working together:</p>
 <h3 id="component-initialization-order">Component Initialization Order</h3>
 <p>From <code>src/ray/gcs/gcs_server/gcs_server.h:140-180</code>:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Main as Main Process
     participant GCS as GCS Server
-    participa...</div>
+    participant Storage as Table Storage
+    participant Managers as Component Managers
+
+    Note over Main,Managers: GCS Server Startup Flow
+
+    Main->>GCS: Create GcsServer(config)
+    GCS->>Storage: Initialize storage backend
+    Storage->>Storage: Connect to Redis/Memory
+
+    GCS->>GCS: InitGcsNodeManager()
+    GCS->>GCS: InitGcsResourceManager()
+    GCS->>GCS: InitGcsJobManager()
+    GCS->>GCS: InitGcsActorManager()
+    GCS->>GCS: InitGcsPlacementGroupManager()
+    GCS->>GCS: InitGcsWorkerManager()
+    GCS->>GCS: InitGcsTaskManager()
+
+    GCS->>GCS: InitKVManager()
+    GCS->>GCS: InitPubSubHandler()
+    GCS->>GCS: InitRuntimeEnvManager()
+
+    GCS->>Managers: Install event listeners
+    GCS->>Main: Start RPC server
+
+    Note over Main,Managers: Ready to handle requests
+</div>
 
 <h3 id="gcs-server-configuration">GCS Server Configuration</h3>
 <p>From <code>src/ray/gcs/gcs_server/gcs_server.h:47-62</code>:</p>
@@ -3254,16 +4293,58 @@ def pipeline_step2(step1_result_ref):
 <h2 id="node-lifecycle-management">Node Lifecycle Management</h2>
 <p>The GCS Node Manager is responsible for tracking all nodes in the cluster and their health status.</p>
 <h3 id="node-state-machine">Node State Machine</h3>
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+<div class="mermaid">
+stateDiagram-v2
     [*] --> Registering: Node startup
-    Registering --> Alive: Registration succes...</div>
+    Registering --> Alive: Registration successful
+
+    Alive --> Draining: Graceful shutdown request
+    Alive --> Dead: Node failure detected
+
+    Draining --> Dead: Drain timeout/completion
+
+    Dead --> [*]: Node cleanup complete
+
+    note right of Alive
+        Node actively participating
+        in cluster operations
+    end note
+
+    note right of Draining
+        Node preparing for shutdown,
+        tasks being migrated
+    end note
+
+    note right of Dead
+        Node removed from cluster,
+        resources deallocated
+    end note
+</div>
 
 <h3 id="node-registration-protocol">Node Registration Protocol</h3>
 <p>From <code>src/ray/gcs/gcs_server/gcs_node_manager.h:54-62</code>:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Raylet as Raylet Process
     participant GCS as GCS Node Manager
-   ...</div>
+    participant Storage as Table Storage
+    participant PubSub as Pub/Sub System
+
+    Note over Raylet,PubSub: Node Registration Flow
+
+    Raylet->>GCS: RegisterNode(node_info, resources)
+    GCS->>GCS: Validate node information
+    GCS->>Storage: Store node in alive_nodes table
+    Storage-->>GCS: Storage confirmation
+
+    GCS->>PubSub: Publish NODE_ADDED event
+    PubSub->>PubSub: Notify subscribers
+
+    GCS->>GCS: Trigger node_added_listeners
+    GCS->>Raylet: RegisterNodeReply(success)
+
+    Note over Raylet,PubSub: Node now active in cluster
+</div>
 
 <p><strong>Node Information Structure:</strong></p>
 <pre><code class="cpp">// From gcs.proto - rpc::GcsNodeInfo
@@ -3294,18 +4375,77 @@ enum GcsNodeState {
 <li><strong>Task Status Updates</strong>: Monitor task execution health</li>
 <li><strong>Network Connectivity</strong>: Detect network partitions</li>
 </ol>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Health Monitoring System"
         subgraph "Detection Methods"
-            He...</div>
+            Heartbeat["Periodic Heartbeats<br/>30s intervals"]
+            ResourceReport["Resource Reports<br/>Real-time updates"]
+            TaskStatus["Task Status<br/>Execution monitoring"]
+            Network["Network Checks<br/>Connection monitoring"]
+        end
+
+        subgraph "Failure Response"
+            Detection["Failure Detection"]
+            Cleanup["Resource Cleanup"]
+            Redistribution["Task Redistribution"]
+            Notification["Event Notification"]
+        end
+    end
+
+    Heartbeat --> Detection
+    ResourceReport --> Detection
+    TaskStatus --> Detection
+    Network --> Detection
+
+    Detection --> Cleanup
+    Detection --> Redistribution
+    Detection --> Notification
+
+    style Detection fill:#ff9999
+    style Cleanup fill:#ffcc99
+    style Redistribution fill:#99ccff
+    style Notification fill:#99ff99
+</div>
 
 <h2 id="resource-management">Resource Management</h2>
 <p>The GCS Resource Manager maintains a global view of all cluster resources and coordinates scheduling decisions.</p>
 <h3 id="resource-architecture">Resource Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Resource Management Hierarchy"
         subgraph "Global Level (GCS)"
-        ...</div>
+            GlobalView["Global Resource View<br/>Cluster-wide aggregation"]
+            Scheduler["Cluster Resource Scheduler<br/>Global scheduling decisions"]
+            Policy["Scheduling Policies<br/>Placement strategies"]
+        end
+
+        subgraph "Node Level (Raylet)"
+            NodeResources["Node Resource Manager<br/>Local resource tracking"]
+            LocalScheduler["Local Task Manager<br/>Local scheduling"]
+            Workers["Worker Pool<br/>Process management"]
+        end
+
+        subgraph "Task Level"
+            TaskRequests["Task Resource Requests<br/>CPU, GPU, memory"]
+            PlacementGroups["Placement Groups<br/>Co-location constraints"]
+            Reservations["Resource Reservations<br/>Temporary allocations"]
+        end
+    end
+
+    GlobalView <--> NodeResources
+    Scheduler <--> LocalScheduler
+    Policy <--> PlacementGroups
+
+    NodeResources <--> Workers
+    LocalScheduler <--> TaskRequests
+    Reservations <--> Workers
+
+    style GlobalView fill:#e1f5fe
+    style Scheduler fill:#f3e5f5
+    style NodeResources fill:#e8f5e8
+    style TaskRequests fill:#fff3e0
+</div>
 
 <h3 id="resource-types-and-management">Resource Types and Management</h3>
 <p><strong>Core Resource Types:</strong></p>
@@ -3328,23 +4468,91 @@ struct ResourceSchedulingState {
 </code></pre>
 
 <h3 id="resource-synchronization-protocol">Resource Synchronization Protocol</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Node as Raylet Node
     participant GCS as GCS Resource Manager
-    ...</div>
+    participant Scheduler as Cluster Scheduler
+    participant Client as Task Submitter
+
+    Note over Node,Client: Resource Update Flow
+
+    Node->>GCS: UpdateResources(current_usage)
+    GCS->>GCS: Update global resource view
+    GCS->>Scheduler: Notify resource changes
+
+    Client->>GCS: SubmitTask(resource_requirements)
+    GCS->>Scheduler: FindNodeForTask(requirements)
+    Scheduler->>Scheduler: Evaluate placement options
+    Scheduler->>GCS: NodeAssignment(node_id)
+
+    GCS->>Node: ScheduleTask(task_spec)
+    Node->>Node: Reserve resources locally
+    Node->>GCS: ResourceReservationConfirm()
+
+    Note over Node,Client: Task execution begins
+</div>
 
 <h2 id="actor-management">Actor Management</h2>
 <p>The GCS Actor Manager handles the distributed coordination of Ray actors, including creation, placement, and lifecycle management.</p>
 <h3 id="actor-lifecycle-management">Actor Lifecycle Management</h3>
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+<div class="mermaid">
+stateDiagram-v2
     [*] --> Pending: Actor creation request
-    Pending --> Alive: Actor successfull...</div>
+    Pending --> Alive: Actor successfully started
+    Pending --> Failed: Creation failed
+
+    Alive --> Restarting: Actor failure (restartable)
+    Alive --> Dead: Actor termination
+
+    Restarting --> Alive: Restart successful
+    Restarting --> Dead: Restart failed/max attempts
+
+    Failed --> [*]: Creation cleanup
+    Dead --> [*]: Actor cleanup complete
+
+    note right of Pending
+        Waiting for resource allocation
+        and worker assignment
+    end note
+
+    note right of Alive
+        Actor processing tasks,
+        state maintained
+    end note
+
+    note right of Restarting
+        Actor failed but configured
+        for automatic restart
+    end note
+</div>
 
 <h3 id="actor-creation-protocol">Actor Creation Protocol</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Client as Ray Client
     participant GCS as GCS Actor Manager
-    pa...</div>
+    participant Scheduler as Resource Scheduler
+    participant Node as Target Raylet
+    participant Worker as Actor Worker
+
+    Note over Client,Worker: Actor Creation Flow
+
+    Client->>GCS: CreateActor(actor_spec, placement_options)
+    GCS->>GCS: Generate unique ActorID
+    GCS->>Scheduler: RequestWorkerLease(resource_requirements)
+
+    Scheduler->>Node: GrantWorkerLease(lease_info)
+    Node->>Worker: StartWorker(actor_spec)
+    Worker->>Worker: Initialize actor state
+
+    Worker->>Node: ActorCreationComplete(actor_id)
+    Node->>GCS: ReportActorCreation(actor_id, worker_info)
+    GCS->>GCS: Update actor registry
+    GCS->>Client: CreateActorReply(actor_handle)
+
+    Note over Client,Worker: Actor ready for method calls
+</div>
 
 <h3 id="actor-placement-strategies">Actor Placement Strategies</h3>
 <p><strong>Placement Group Integration:</strong></p>
@@ -3361,10 +4569,42 @@ struct ActorPlacementSpec {
 <h2 id="job-management">Job Management</h2>
 <p>The GCS Job Manager coordinates job submission, tracking, and resource cleanup across the cluster.</p>
 <h3 id="job-lifecycle-architecture">Job Lifecycle Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Job Management System"
         subgraph "Job Coordination"
-            Submis...</div>
+            Submission["Job Submission<br/>Driver registration"]
+            Tracking["Job Tracking<br/>Status monitoring"]
+            Cleanup["Job Cleanup<br/>Resource deallocation"]
+        end
+
+        subgraph "Resource Allocation"
+            Resources["Resource Requests<br/>CPU, GPU, memory"]
+            Placement["Placement Decisions<br/>Node assignments"]
+            Monitoring["Usage Monitoring<br/>Real-time tracking"]
+        end
+
+        subgraph "Fault Handling"
+            Detection["Failure Detection<br/>Job/task failures"]
+            Recovery["Recovery Logic<br/>Restart policies"]
+            Termination["Job Termination<br/>Cleanup procedures"]
+        end
+    end
+
+    Submission --> Resources
+    Tracking --> Monitoring
+    Cleanup --> Termination
+
+    Resources --> Placement
+    Monitoring --> Detection
+    Detection --> Recovery
+    Recovery --> Termination
+
+    style Submission fill:#e1f5fe
+    style Resources fill:#f3e5f5
+    style Detection fill:#e8f5e8
+    style Cleanup fill:#fff3e0
+</div>
 
 <h3 id="job-state-management">Job State Management</h3>
 <pre><code class="cpp">// Job states tracked by GCS
@@ -3391,10 +4631,45 @@ struct JobInfo {
 <h2 id="storage-and-persistence">Storage and Persistence</h2>
 <p>The GCS uses pluggable storage backends to persist critical cluster state and enable recovery.</p>
 <h3 id="storage-architecture">Storage Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "GCS Storage System"
         subgraph "Storage Interface"
-            TableSto...</div>
+            TableStorage["GCS Table Storage<br/>Abstract interface"]
+            Operations["CRUD Operations<br/>Get, Put, Delete, List"]
+            Transactions["Transaction Support<br/>Atomic operations"]
+        end
+
+        subgraph "Backend Implementations"
+            RedisStorage["Redis Storage<br/>Persistent backend"]
+            MemoryStorage["Memory Storage<br/>In-memory backend"]
+            FileStorage["File Storage<br/>Local filesystem"]
+        end
+
+        subgraph "Data Categories"
+            NodeData["Node Information<br/>Cluster topology"]
+            ActorData["Actor Registry<br/>Actor metadata"]
+            JobData["Job Information<br/>Job lifecycle"]
+            ResourceData["Resource State<br/>Allocation data"]
+        end
+    end
+
+    TableStorage --> RedisStorage
+    TableStorage --> MemoryStorage
+    TableStorage --> FileStorage
+
+    Operations --> NodeData
+    Operations --> ActorData
+    Operations --> JobData
+    Operations --> ResourceData
+
+    Transactions --> RedisStorage
+
+    style TableStorage fill:#e1f5fe
+    style RedisStorage fill:#f3e5f5
+    style NodeData fill:#e8f5e8
+    style Operations fill:#fff3e0
+</div>
 
 <h3 id="storage-configuration-options">Storage Configuration Options</h3>
 <p>From <code>src/ray/gcs/gcs_server/gcs_server.h:98-104</code>:</p>
@@ -3453,18 +4728,74 @@ static constexpr char kRedisStorage[] = &quot;redis&quot;;
 <li><strong>Resource State</strong>: Cluster resource allocation and usage</li>
 <li><strong>Configuration</strong>: Cluster and component configurations</li>
 </ol>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant GCS as GCS Manager
     participant Storage as Table Storage
-    part...</div>
+    participant Redis as Redis Backend
+    participant Recovery as Recovery Process
+
+    Note over GCS,Recovery: Data Persistence Flow
+
+    GCS->>Storage: Put(key, value, table_name)
+    Storage->>Redis: HSET cluster:table:key value
+    Redis-->>Storage: Confirmation
+    Storage-->>GCS: Success
+
+    Note over GCS,Recovery: Server Restart Scenario
+
+    Recovery->>Storage: GetAll(table_name)
+    Storage->>Redis: HGETALL cluster:table:*
+    Redis-->>Storage: All stored data
+    Storage-->>Recovery: Data for reconstruction
+    Recovery->>GCS: Initialize(restored_data)
+</div>
 
 <h2 id="communication-and-rpc">Communication and RPC</h2>
 <p>The GCS server provides gRPC-based APIs for all cluster components to interact with global state.</p>
 <h3 id="rpc-service-architecture">RPC Service Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "GCS RPC Server"
         subgraph "Service Handlers"
-            NodeService["...</div>
+            NodeService["Node Info Service<br/>Node registration/health"]
+            ActorService["Actor Info Service<br/>Actor management"]
+            JobService["Job Info Service<br/>Job coordination"]
+            ResourceService["Resource Service<br/>Resource allocation"]
+            KVService["KV Service<br/>Configuration storage"]
+            PlacementService["Placement Group Service<br/>Group management"]
+        end
+
+        subgraph "Infrastructure"
+            RPCServer["gRPC Server<br/>Multi-threaded"]
+            Authentication["Authentication<br/>Security layer"]
+            Middleware["Middleware<br/>Logging, metrics"]
+        end
+
+        subgraph "Client Pools"
+            RayletClients["Raylet Client Pool<br/>Node communication"]
+            WorkerClients["Worker Client Pool<br/>Process communication"]
+        end
+    end
+
+    RPCServer --> NodeService
+    RPCServer --> ActorService
+    RPCServer --> JobService
+    RPCServer --> ResourceService
+    RPCServer --> KVService
+    RPCServer --> PlacementService
+
+    Authentication --> RPCServer
+    Middleware --> RPCServer
+
+    NodeService <--> RayletClients
+    ActorService <--> WorkerClients
+
+    style RPCServer fill:#e1f5fe
+    style NodeService fill:#f3e5f5
+    style Authentication fill:#e8f5e8
+    style RayletClients fill:#fff3e0
+</div>
 
 <h3 id="key-rpc-interfaces">Key RPC Interfaces</h3>
 <p><strong>Node Management RPCs:</strong></p>
@@ -3528,16 +4859,71 @@ service NodeInfoGcsService {
 <h2 id="fault-tolerance-and-recovery">Fault Tolerance and Recovery</h2>
 <p>The GCS implements comprehensive fault tolerance mechanisms to ensure cluster resilience.</p>
 <h3 id="recovery-architecture">Recovery Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Fault Tolerance System"
         subgraph "State Persistence"
-            Stat...</div>
+            StateCapture["State Capture<br/>Continuous snapshots"]
+            Checkpointing["Checkpointing<br/>Periodic saves"]
+            WAL["Write-Ahead Log<br/>Operation logging"]
+        end
+
+        subgraph "Failure Detection"
+            HealthMonitor["Health Monitoring<br/>Component health"]
+            FailureDetector["Failure Detection<br/>Timeout mechanisms"]
+            EventStream["Event Stream<br/>State change tracking"]
+        end
+
+        subgraph "Recovery Process"
+            StateRestore["State Restoration<br/>Data recovery"]
+            ServiceRestart["Service Restart<br/>Component revival"]
+            ClientReconnect["Client Reconnection<br/>Session restoration"]
+        end
+    end
+
+    StateCapture --> StateRestore
+    Checkpointing --> StateRestore
+    WAL --> StateRestore
+
+    HealthMonitor --> FailureDetector
+    FailureDetector --> EventStream
+    EventStream --> ServiceRestart
+
+    ServiceRestart --> ClientReconnect
+    StateRestore --> ServiceRestart
+
+    style StateCapture fill:#e1f5fe
+    style FailureDetector fill:#f3e5f5
+    style StateRestore fill:#e8f5e8
+    style ServiceRestart fill:#fff3e0
+</div>
 
 <h3 id="gcs-server-recovery-process">GCS Server Recovery Process</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Monitor as Monitoring System
     participant GCS as GCS Server
-    p...</div>
+    participant Storage as Persistent Storage
+    participant Clients as Ray Clients
+    participant Nodes as Cluster Nodes
+
+    Note over Monitor,Nodes: GCS Failure and Recovery
+
+    Monitor->>Monitor: Detect GCS failure
+    Monitor->>GCS: Restart GCS process
+    GCS->>Storage: Load persistent state
+    Storage-->>GCS: Restore node/actor/job data
+
+    GCS->>GCS: Rebuild in-memory state
+    GCS->>Nodes: Query current node status
+    Nodes-->>GCS: Report current state
+
+    GCS->>GCS: Reconcile state differences
+    GCS->>Clients: Notify service restored
+    Clients->>GCS: Reconnect and resume operations
+
+    Note over Monitor,Nodes: Cluster fully operational
+</div>
 
 <h3 id="recovery-scenarios">Recovery Scenarios</h3>
 <p><strong>1. GCS Server Crash:</strong>
@@ -3599,10 +4985,40 @@ service NodeInfoGcsService {
 </tbody>
 </table>
 <h3 id="optimization-strategies">Optimization Strategies</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Performance Optimization"
         subgraph "Caching"
-            LocalCache["...</div>
+            LocalCache["Local Caching<br/>Frequently accessed data"]
+            DistributedCache["Distributed Cache<br/>Shared state cache"]
+            TTLCache["TTL Cache<br/>Time-based expiration"]
+        end
+
+        subgraph "Batching"
+            RequestBatch["Request Batching<br/>Aggregate operations"]
+            UpdateBatch["Update Batching<br/>Group state changes"]
+            NotificationBatch["Notification Batching<br/>Event aggregation"]
+        end
+
+        subgraph "Async Processing"
+            AsyncRPC["Async RPC<br/>Non-blocking calls"]
+            EventQueue["Event Queue<br/>Async event processing"]
+            BackgroundTasks["Background Tasks<br/>Maintenance operations"]
+        end
+    end
+
+    LocalCache --> RequestBatch
+    DistributedCache --> UpdateBatch
+    TTLCache --> NotificationBatch
+
+    RequestBatch --> AsyncRPC
+    UpdateBatch --> EventQueue
+    NotificationBatch --> BackgroundTasks
+
+    style LocalCache fill:#e1f5fe
+    style RequestBatch fill:#f3e5f5
+    style AsyncRPC fill:#e8f5e8
+</div>
 
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="core-code-structure">Core Code Structure</h3>
@@ -9134,11 +10550,54 @@ Assistant:&lt;rewritten_file&gt;
 </ol>
 <p>The object store is designed to handle massive datasets efficiently while providing transparent access patterns for Ray applications.</p>
 <h2 id="architecture-overview">Architecture Overview</h2>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Ray Cluster"
         subgraph "Node 1"
             subgraph "Raylet 1"
-      ...</div>
+                LOM1["Local Object Manager"]
+                OM1["Object Manager"]
+            end
+            PS1["Plasma Store"]
+            Workers1["Workers"]
+        end
+
+        subgraph "Node 2"
+            subgraph "Raylet 2"
+                LOM2["Local Object Manager"]
+                OM2["Object Manager"]
+            end
+            PS2["Plasma Store"]
+            Workers2["Workers"]
+        end
+
+        subgraph "Global Coordination"
+            GCS["Global Control Service"]
+            OD["Object Directory"]
+            Storage["External Storage<br/>(S3, NFS, etc.)"]
+        end
+    end
+
+    Workers1 <-->|"Put/Get Objects"| PS1
+    Workers2 <-->|"Put/Get Objects"| PS2
+
+    LOM1 <-->|"Local Management"| PS1
+    LOM2 <-->|"Local Management"| PS2
+
+    OM1 <-->|"Inter-Node Transfer"| OM2
+
+    LOM1 <-->|"Spill/Restore"| Storage
+    LOM2 <-->|"Spill/Restore"| Storage
+
+    OM1 <-->|"Location Metadata"| OD
+    OM2 <-->|"Location Metadata"| OD
+    OD <-->|"Global State"| GCS
+
+    style PS1 fill:#e1f5fe
+    style PS2 fill:#e1f5fe
+    style GCS fill:#f3e5f5
+    style Storage fill:#e8f5e8
+</div>
 
 <h3 id="key-design-principles">Key Design Principles</h3>
 <ol>
@@ -9151,10 +10610,40 @@ Assistant:&lt;rewritten_file&gt;
 <h2 id="local-storage-plasma-store">Local Storage: Plasma Store</h2>
 <p>The Plasma Store provides high-performance local object storage using memory-mapped shared memory.</p>
 <h3 id="plasma-architecture">Plasma Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Plasma Store Process"
         subgraph "Memory Management"
-            Shared...</div>
+            SharedMem["Shared Memory<br/>mmap regions"]
+            Allocator["Plasma Allocator<br/>Block-based allocation"]
+            Metadata["Object Metadata<br/>Headers & offsets"]
+        end
+
+        subgraph "Object Storage"
+            Objects["Stored Objects<br/>Data + Metadata"]
+            FallbackFS["Fallback Storage<br/>Filesystem"]
+        end
+    end
+
+    subgraph "Client Processes"
+        Worker1["Worker Process 1"]
+        Worker2["Worker Process 2"]
+        Raylet["Raylet Process"]
+    end
+
+    SharedMem --> Objects
+    Allocator --> SharedMem
+    Metadata --> Objects
+    Objects -.->|"Memory Pressure"| FallbackFS
+
+    Worker1 <-->|"UDS Protocol"| SharedMem
+    Worker2 <-->|"UDS Protocol"| SharedMem
+    Raylet <-->|"Management"| Metadata
+
+    style SharedMem fill:#e1f5fe
+    style Objects fill:#f3e5f5
+    style FallbackFS fill:#fff3e0
+</div>
 
 <h3 id="object-storage-structure">Object Storage Structure</h3>
 <p>From <code>src/ray/object_manager/plasma/plasma.h:35-70</code>:</p>
@@ -9179,23 +10668,95 @@ Assistant:&lt;rewritten_file&gt;
 - Minimizes fragmentation through power-of-2 sizing
 - Supports both main memory and fallback filesystem storage</p>
 <p><strong>Memory Layout:</strong>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Object Memory Layout"
         Header["Object Header<br/>(metadata)"]
-        ...</div></p>
+        Data["Object Data<br/>(payload)"]
+        Metadata["Object Metadata<br/>(user metadata)"]
+        Padding["Alignment Padding<br/>(64-byte aligned)"]
+    end</p>
+<pre><code>Header --&gt; Data
+Data --&gt; Metadata
+Metadata --&gt; Padding
+
+style Header fill:#e1f5fe
+style Data fill:#f3e5f5
+style Metadata fill:#e8f5e8
+style Padding fill:#fff3e0
+</code></pre>
+</div>
+
 <h2 id="distributed-management-object-manager">Distributed Management: Object Manager</h2>
 <p>The Object Manager handles inter-node object transfers and distributed coordination.</p>
 <h3 id="object-manager-architecture">Object Manager Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Object Manager Components"
         subgraph "Transfer Management"
-           ...</div>
+            PullMgr["Pull Manager<br/>Request objects from remote nodes"]
+            PushMgr["Push Manager<br/>Send objects to remote nodes"]
+            ChunkReader["Chunk Object Reader<br/>Read objects in chunks"]
+        end
+
+        subgraph "Network Layer"
+            RPCServer["RPC Server<br/>Handle remote requests"]
+            RPCClient["RPC Client Pool<br/>Send requests to peers"]
+            BufferPool["Object Buffer Pool<br/>Manage transfer buffers"]
+        end
+
+        subgraph "Local Integration"
+            LocalStore["Local Plasma Store"]
+            Directory["Object Directory<br/>Location tracking"]
+            Spilling["Spill Manager<br/>External storage"]
+        end
+    end
+
+    PullMgr <--> RPCClient
+    PushMgr <--> RPCServer
+    ChunkReader <--> LocalStore
+
+    RPCServer <--> BufferPool
+    RPCClient <--> BufferPool
+
+    PullMgr <--> Directory
+    PushMgr <--> Directory
+
+    LocalStore <--> Spilling
+
+    style PullMgr fill:#e1f5fe
+    style PushMgr fill:#f3e5f5
+    style LocalStore fill:#e8f5e8
+    style Directory fill:#fff3e0
+</div>
 
 <h3 id="object-transfer-protocol">Object Transfer Protocol</h3>
 <p>Ray uses a sophisticated chunked transfer protocol for large objects:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Node1 as Node 1 (Requester)
-    participant Node2 as Node 2 (Provide...</div>
+    participant Node2 as Node 2 (Provider)
+    participant Dir as Object Directory
+
+    Note over Node1,Node2: Object Transfer Flow
+
+    Node1->>Dir: Subscribe to object location
+    Dir->>Node1: Object located at Node 2
+
+    Node1->>Node2: Pull Request<br/>{object_id, chunk_size}
+    Node2->>Node2: Check local availability
+
+    alt Object Available Locally
+        loop For Each Chunk
+            Node2->>Node1: Push Chunk<br/>{chunk_index, data, metadata}
+            Node1->>Node1: Write chunk to local store
+        end
+        Node1->>Node2: Push Complete ACK
+    else Object Not Available
+        Node2->>Node1: Pull Error<br/>{object_not_found}
+        Node1->>Dir: Request object reconstruction
+    end
+</div>
 
 <h3 id="configuration-and-performance-tuning">Configuration and Performance Tuning</h3>
 <p>From <code>src/ray/object_manager/object_manager.h:40-75</code>:</p>
@@ -9251,10 +10812,41 @@ Assistant:&lt;rewritten_file&gt;
 <h2 id="global-coordination-object-directory">Global Coordination: Object Directory</h2>
 <p>The Object Directory provides cluster-wide object location tracking and metadata management.</p>
 <h3 id="object-directory-design">Object Directory Design</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Object Directory Service"
         subgraph "Location Tracking"
-            Lo...</div>
+            LocationMap["Object → Node Mapping<br/>In-memory cache"]
+            Subscriptions["Location Subscriptions<br/>Callback registry"]
+            Updates["Location Updates<br/>Event stream"]
+        end
+
+        subgraph "GCS Integration"
+            GCSClient["GCS Client<br/>Global coordination"]
+            Pubsub["Pub/Sub System<br/>Event distribution"]
+            Persistence["Persistent Storage<br/>Metadata backup"]
+        end
+
+        subgraph "Spill Coordination"
+            SpillTracking["Spill URL Tracking<br/>External storage URLs"]
+            RestoreQueue["Restore Requests<br/>Pending restorations"]
+        end
+    end
+
+    LocationMap <--> Subscriptions
+    Subscriptions <--> Updates
+
+    Updates <--> GCSClient
+    GCSClient <--> Pubsub
+    GCSClient <--> Persistence
+
+    SpillTracking <--> GCSClient
+    RestoreQueue <--> Updates
+
+    style LocationMap fill:#e1f5fe
+    style GCSClient fill:#f3e5f5
+    style SpillTracking fill:#e8f5e8
+</div>
 
 <h3 id="object-location-subscription-model">Object Location Subscription Model</h3>
 <p>From <code>src/ray/object_manager/object_directory.h:33-70</code>:</p>
@@ -9296,10 +10888,33 @@ class IObjectDirectory {
 <h2 id="object-lifecycle-management">Object Lifecycle Management</h2>
 <p>Ray objects go through a well-defined lifecycle from creation to deletion.</p>
 <h3 id="object-lifecycle-states">Object Lifecycle States</h3>
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+<div class="mermaid">
+stateDiagram-v2
     [*] --> Creating: Task execution
     Creating --> Local: Object created locally
-...</div>
+
+    Local --> InMemory: Stored in Plasma
+    Local --> Spilled: Memory pressure
+
+    InMemory --> Pinned: Referenced by tasks
+    InMemory --> Unpinned: No active references
+
+    Pinned --> Unpinned: References released
+    Unpinned --> Evicted: Memory pressure
+    Unpinned --> Transferred: Remote request
+
+    Spilled --> Restoring: Access request
+    Restoring --> InMemory: Restoration complete
+
+    Evicted --> Reconstructing: Needed again
+    Reconstructing --> Local: Reconstruction complete
+
+    Transferred --> Remote: Copied to remote node
+
+    Remote --> [*]: Deleted from original
+    Spilled --> [*]: Deleted after timeout
+    Evicted --> [*]: Deleted after timeout
+</div>
 
 <h3 id="object-pinning-and-reference-counting">Object Pinning and Reference Counting</h3>
 <p>From <code>src/ray/raylet/local_object_manager.h:67-75</code>:</p>
@@ -9318,17 +10933,73 @@ struct LocalObjectInfo {
 </code></pre>
 
 <p><strong>Reference Counting Protocol:</strong></p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Worker as Worker Process
-    participant LOM as Local Object Manager...</div>
+    participant LOM as Local Object Manager
+    participant Owner as Object Owner
+    participant Plasma as Plasma Store
+
+    Note over Worker,Plasma: Object Pinning Flow
+
+    Worker->>LOM: PinObjects(object_ids, owner_address)
+    LOM->>Plasma: Pin objects in store
+    LOM->>Owner: WaitForObjectEviction(object_ids)
+
+    Note over Worker,Plasma: Object Release Flow
+
+    Owner->>LOM: EvictionReply(can_evict=true)
+    LOM->>Plasma: Unpin objects
+    Plasma->>Plasma: Mark objects evictable
+
+    alt Memory Pressure
+        Plasma->>LOM: RequestEviction(object_ids)
+        LOM->>LOM: Initiate spilling process
+    end
+</div>
 
 <h2 id="memory-management-and-spilling">Memory Management and Spilling</h2>
 <p>Ray implements sophisticated memory management with automatic spilling to external storage.</p>
 <h3 id="memory-management-architecture">Memory Management Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Memory Management System"
         subgraph "Memory Monitoring"
-            Me...</div>
+            MemTracker["Memory Usage Tracker<br/>Real-time monitoring"]
+            Thresholds["Eviction Thresholds<br/>High/low watermarks"]
+            Policies["Eviction Policies<br/>LRU, size-based"]
+        end
+
+        subgraph "Spilling System"
+            SpillQueue["Spill Queue<br/>Objects to spill"]
+            IOWorkers["IO Worker Pool<br/>Async spill operations"]
+            Storage["External Storage<br/>S3, NFS, local disk"]
+        end
+
+        subgraph "Restoration System"
+            RestoreQueue["Restore Queue<br/>Objects to restore"]
+            URLTracker["URL Tracking<br/>Spilled object locations"]
+            FusedRestore["Fused Restoration<br/>Batch operations"]
+        end
+    end
+
+    MemTracker --> Thresholds
+    Thresholds --> Policies
+    Policies --> SpillQueue
+
+    SpillQueue --> IOWorkers
+    IOWorkers --> Storage
+    IOWorkers --> URLTracker
+
+    RestoreQueue --> IOWorkers
+    URLTracker --> FusedRestore
+    FusedRestore --> IOWorkers
+
+    style MemTracker fill:#e1f5fe
+    style IOWorkers fill:#f3e5f5
+    style Storage fill:#e8f5e8
+    style FusedRestore fill:#fff3e0
+</div>
 
 <h3 id="spilling-algorithm">Spilling Algorithm</h3>
 <p>From <code>src/ray/raylet/local_object_manager.h:206-228</code>:</p>
@@ -9347,9 +11018,29 @@ void OnObjectSpilled(
 </code></pre>
 
 <p><strong>Spilling Decision Algorithm:</strong></p>
-<div class="diagram-placeholder">📊 Diagram: flowchart TD
+<div class="mermaid">
+flowchart TD
     Start([Memory Pressure Detected]) --> CheckThreshold{Memory > High Watermark?}
-    ...</div>
+
+    CheckThreshold -->|Yes| SelectObjects[Select Objects to Spill<br/>LRU + Size Criteria]
+    CheckThreshold -->|No| End([No Action Needed])
+
+    SelectObjects --> CheckEvictable{Objects Evictable?}
+    CheckEvictable -->|Yes| InitiateSpill[Start Spill Process<br/>Batch Operations]
+    CheckEvictable -->|No| ForceEvict[Force Eviction<br/>If Memory Critical]
+
+    InitiateSpill --> SpillToStorage[Transfer to External Storage<br/>Parallel IO Workers]
+    ForceEvict --> SpillToStorage
+
+    SpillToStorage --> UpdateMetadata[Update Object Directory<br/>Record Spill URLs]
+    UpdateMetadata --> FreeMemory[Free Local Memory<br/>Update Usage Tracking]
+    FreeMemory --> End
+
+    style CheckThreshold fill:#e1f5fe
+    style InitiateSpill fill:#f3e5f5
+    style SpillToStorage fill:#e8f5e8
+    style UpdateMetadata fill:#fff3e0
+</div>
 
 <h3 id="restoration-and-fused-operations">Restoration and Fused Operations</h3>
 <p><strong>Fused Restoration</strong> combines multiple small objects into single operations for efficiency:</p>
@@ -9429,10 +11120,39 @@ void AsyncRestoreSpilledObject(
 </tbody>
 </table>
 <p><strong>Memory Management:</strong></p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Memory Usage Patterns"
         subgraph "Memory Efficiency"
-            ZeroC...</div>
+            ZeroCopy["Zero-Copy Access<br/>Direct mmap reads"]
+            SharedMem["Shared Memory<br/>Multiple process access"]
+            Alignment["64-byte Alignment<br/>Cache optimization"]
+        end
+
+        subgraph "Spilling Performance"
+            AsyncIO["Async I/O Workers<br/>Non-blocking operations"]
+            Batching["Batched Operations<br/>Reduced overhead"]
+            Compression["Optional Compression<br/>Bandwidth optimization"]
+        end
+
+        subgraph "Network Optimization"
+            Chunking["Chunked Transfers<br/>Flow control"]
+            Pipelining["Request Pipelining<br/>Latency hiding"]
+            BandwidthLimit["Bandwidth Limiting<br/>Fair sharing"]
+        end
+    end
+
+    ZeroCopy --> AsyncIO
+    SharedMem --> Batching
+    Alignment --> Chunking
+
+    AsyncIO --> Pipelining
+    Batching --> BandwidthLimit
+
+    style ZeroCopy fill:#e1f5fe
+    style AsyncIO fill:#f3e5f5
+    style Chunking fill:#e8f5e8
+</div>
 
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="critical-code-paths">Critical Code Paths</h3>
@@ -9484,10 +11204,39 @@ void AsyncRestoreSpilledObject(
 <li><strong>Spill Redundancy</strong>: Objects spilled to external storage maintain multiple copies</li>
 <li><strong>Network Resilience</strong>: Failed transfers are automatically retried with exponential backoff</li>
 </ol>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Fault Recovery Strategies"
         subgraph "Object Loss Recovery"
-          ...</div>
+            Reconstruction["Task Re-execution<br/>Lineage-based recovery"]
+            Replication["Multi-node Storage<br/>Availability redundancy"]
+            SpillBackup["External Storage<br/>Persistent backup"]
+        end
+
+        subgraph "Network Failures"
+            RetryLogic["Exponential Backoff<br/>Automatic retry"]
+            Rerouting["Alternative Paths<br/>Multi-node sources"]
+            Timeout["Timeout Handling<br/>Failure detection"]
+        end
+
+        subgraph "Storage Failures"
+            PlasmaRecover["Plasma Restart<br/>Process recovery"]
+            DiskFallback["Disk Fallback<br/>Alternative storage"]
+            GCIntegrity["GC Integration<br/>Metadata consistency"]
+        end
+    end
+
+    Reconstruction --> RetryLogic
+    Replication --> Rerouting
+    SpillBackup --> PlasmaRecover
+
+    RetryLogic --> DiskFallback
+    Rerouting --> GCIntegrity
+
+    style Reconstruction fill:#e1f5fe
+    style RetryLogic fill:#f3e5f5
+    style PlasmaRecover fill:#e8f5e8
+</div>
 
 <h2 id="code-modification-guidelines">Code Modification Guidelines</h2>
 <h3 id="adding-new-object-store-features">Adding New Object Store Features</h3>
@@ -9600,39 +11349,91 @@ ray status --verbose
 <li><strong>Performance Optimization</strong>: Efficient algorithms for large-scale clusters</li>
 </ul>
 <h3 id="scheduling-hierarchy">Scheduling Hierarchy</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[User Workload] --> B[Core Worker]
     B --> C[Lease Policy]
-    C --> D[Raylet Node M...</div>
+    C --> D[Raylet Node Manager]
+    D --> E[Cluster Task Manager]
+    E --> F[Cluster Resource Scheduler]
+    F --> G[Scheduling Policies]
+    G --> H[Local Task Manager]
+    H --> I[Worker Pool]
+
+    J[GCS Server] --> K[GCS Actor Scheduler]
+    J --> L[GCS Placement Group Scheduler]
+
+    K --> F
+    L --> F
+
+    M[Autoscaler] --> N[Resource Demand Scheduler]
+    N --> O[Node Provider]
+</div>
 
 <h2 id="scheduling-architecture-overview">Scheduling Architecture Overview</h2>
 <h3 id="multi-level-scheduling-architecture">Multi-Level Scheduling Architecture</h3>
 <p>Ray implements a hierarchical scheduling architecture with multiple decision points:</p>
 <h4 id="1-client-side-scheduling">1. Client-Side Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph LR
+<p><div class="mermaid">
+graph LR
     A[ray.remote Call] --&gt; B[Core Worker]
     B --&gt; C[Locality-Aware Lease Policy]
-    C --...</div></p>
+    C --&gt; D[Best Node Selection]
+    D --&gt; E[Raylet RPC]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/core_worker/lease_policy.cc</code></p>
 <p>The client-side scheduling makes initial placement decisions based on:
 - Data locality (object location)
 - Scheduling strategies (spread, node affinity)
 - Resource requirements</p>
 <h4 id="2-raylet-level-scheduling">2. Raylet-Level Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph TD
+<p><div class="mermaid">
+graph TD
     A[Raylet Receives Task] --&gt; B[Cluster Task Manager]
-    B --&gt; C[Resource Availability C...</div></p>
+    B --&gt; C[Resource Availability Check]
+    C --&gt; D{Resources Available?}
+    D --&gt;|Yes| E[Local Task Manager]
+    D --&gt;|No| F[Spillback Decision]
+    F --&gt; G[Remote Node Selection]
+    G --&gt; H[Forward to Remote Raylet]
+    E --&gt; I[Worker Assignment]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/raylet/scheduling/cluster_task_manager.cc</code></p>
 <h4 id="3-gcs-level-scheduling">3. GCS-Level Scheduling</h4>
-<p><div class="diagram-placeholder">📊 Diagram: graph TD
+<p><div class="mermaid">
+graph TD
     A[GCS Scheduling Request] --&gt; B{Task Type}
-    B --&gt;|Actor Creation| C[GCS Actor Schedu...</div></p>
+    B --&gt;|Actor Creation| C[GCS Actor Scheduler]
+    B --&gt;|Placement Group| D[GCS Placement Group Scheduler]
+    C --&gt; E[Cluster Resource Scheduler]
+    D --&gt; E
+    E --&gt; F[Node Selection]
+    F --&gt; G[Resource Reservation]
+</div></p>
 <p><strong>Location</strong>: <code>src/ray/gcs/gcs_server/gcs_actor_scheduler.cc</code></p>
 <h3 id="core-scheduling-flow">Core Scheduling Flow</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant CW as Core Worker
     participant LP as Lease Policy
-    participant...</div>
+    participant RM as Raylet Manager
+    participant CTM as Cluster Task Manager
+    participant CRS as Cluster Resource Scheduler
+    participant LTM as Local Task Manager
+    participant WP as Worker Pool
+
+    CW->>LP: GetBestNodeForTask()
+    LP->>LP: Analyze locality & strategy
+    LP->>RM: RequestWorkerLease()
+    RM->>CTM: QueueAndScheduleTask()
+    CTM->>CRS: GetBestSchedulableNode()
+    CRS->>CRS: Apply scheduling policy
+    CRS-->>CTM: Selected node
+    CTM->>LTM: QueueAndScheduleTask() [if local]
+    LTM->>WP: PopWorker()
+    WP-->>LTM: Worker instance
+    LTM-->>CTM: Task dispatched
+</div>
 
 <h2 id="core-scheduling-components">Core Scheduling Components</h2>
 <h3 id="clusterresourcescheduler">ClusterResourceScheduler</h3>
@@ -9820,9 +11621,18 @@ TEST_F(ClusterResourceSchedulerTest, DynamicResourceTest) {
 
 <h3 id="resource-binpacking">Resource Binpacking</h3>
 <p>Ray implements sophisticated binpacking for resource allocation:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Resource Request] --> B[Sort by Resource Requirements]
-    B --> C[Find Best Fit Node...</div>
+    B --> C[Find Best Fit Node]
+    C --> D{Resources Available?}
+    D -->|Yes| E[Allocate Resources]
+    D -->|No| F[Try Next Node]
+    F --> G{More Nodes?}
+    G -->|Yes| C
+    G -->|No| H[Request Infeasible]
+    E --> I[Update Node Resources]
+</div>
 
 <h2 id="task-scheduling-algorithms">Task Scheduling Algorithms</h2>
 <h3 id="hybrid-scheduling-algorithm">Hybrid Scheduling Algorithm</h3>
@@ -9958,10 +11768,19 @@ actor = MyActor.remote()
 </code></pre>
 
 <h3 id="actor-lifecycle-and-scheduling">Actor Lifecycle and Scheduling</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Actor Creation Request] --> B[GCS Actor Scheduler]
     B --> C{Scheduling Mode}
-    C...</div>
+    C -->|GCS Scheduling| D[Cluster Task Manager]
+    C -->|Raylet Scheduling| E[Select Forwarding Node]
+    D --> F[Resource Allocation]
+    E --> G[Direct Worker Lease]
+    F --> H[Worker Assignment]
+    G --> H
+    H --> I[Actor Initialization]
+    I --> J[Ready for Method Calls]
+</div>
 
 <h3 id="actor-scheduling-considerations">Actor Scheduling Considerations</h3>
 <p><strong>Resource Lifetime</strong>: Actors hold resources for their entire lifetime</p>
@@ -10053,9 +11872,22 @@ actor = MyActor.remote()
 <li><strong>Algorithm</strong>: One bundle per node constraint</li>
 </ul>
 <h3 id="bundle-scheduling-algorithm">Bundle Scheduling Algorithm</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Placement Group Request] --> B[Parse Bundles]
-    B --> C[Sort by Resource Requiremen...</div>
+    B --> C[Sort by Resource Requirements]
+    C --> D[Apply Placement Strategy]
+    D --> E{Strategy Type}
+    E -->|PACK| F[First-Fit Decreasing]
+    E -->|SPREAD| G[Round-Robin Distribution]
+    E -->|STRICT_PACK| H[Single Node Placement]
+    E -->|STRICT_SPREAD| I[One Bundle Per Node]
+    F --> J[Resource Reservation]
+    G --> J
+    H --> J
+    I --> J
+    J --> K[Bundle Commitment]
+</div>
 
 <h3 id="bundle-resource-formatting">Bundle Resource Formatting</h3>
 <p>Ray formats placement group resources with special naming:</p>
@@ -10101,10 +11933,28 @@ std::string FormatPlacementGroupResource(
 </code></pre>
 
 <h3 id="placement-group-lifecycle">Placement Group Lifecycle</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant User
     participant GCS as GCS PG Scheduler
-    participant CRS as ...</div>
+    participant CRS as Cluster Resource Scheduler
+    participant Raylet
+    participant Worker
+
+    User->>GCS: ray.util.placement_group()
+    GCS->>GCS: Parse bundles & strategy
+    GCS->>CRS: Schedule(bundle_list, options)
+    CRS->>CRS: Apply placement strategy
+    CRS-->>GCS: Selected nodes
+    GCS->>Raylet: PrepareBundleResources()
+    Raylet-->>GCS: Resources reserved
+    GCS->>Raylet: CommitBundleResources()
+    Raylet-->>GCS: Resources committed
+    GCS-->>User: Placement group ready
+
+    User->>Worker: Task with PG scheduling strategy
+    Worker->>Raylet: Use PG bundle resources
+</div>
 
 <h2 id="scheduling-strategies">Scheduling Strategies</h2>
 <h3 id="strategy-types-and-implementation">Strategy Types and Implementation</h3>
@@ -10348,10 +12198,18 @@ struct NodeResources {
 </code></pre>
 
 <h3 id="locality-vs-strategy-priority">Locality vs Strategy Priority</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     A[Task Submission] --> B{Explicit Strategy?}
     B -->|Yes| C[Use Explicit Strategy]
-  ...</div>
+    B -->|No| D[Check Data Locality]
+    D --> E{Objects Local?}
+    E -->|Yes| F[Select Node with Most Data]
+    E -->|No| G[Use Default Strategy]
+    C --> H[Schedule Task]
+    F --> H
+    G --> H
+</div>
 
 <h3 id="locality-testing">Locality Testing</h3>
 <pre><code class="cpp">// From src/ray/tests/test_scheduling.py
@@ -10389,9 +12247,20 @@ def test_locality_aware_leasing(ray_start_cluster):
 </code></pre>
 
 <h3 id="resource-synchronization">Resource Synchronization</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant LRM as Local Resource Manager
-    participant CRM as Cluster Resourc...</div>
+    participant CRM as Cluster Resource Manager
+    participant GCS as GCS Server
+    participant Remote as Remote Raylet
+
+    LRM->>CRM: UpdateLocalResources()
+    CRM->>GCS: ReportResourceUsage()
+    GCS->>Remote: BroadcastResourceUpdate()
+    Remote->>CRM: UpdateRemoteNodeResources()
+
+    Note over CRM: Maintains consistent cluster view
+</div>
 
 <h3 id="resource-reporting">Resource Reporting</h3>
 <p><strong>Location</strong>: <code>src/ray/raylet/scheduling/scheduler_resource_reporter.cc</code></p>
@@ -10950,9 +12819,19 @@ task_queue_size = Counter(
 <p><strong>Cost Efficient</strong>: By understanding your workload patterns, it minimizes cloud costs by spinning up the cheapest combination of machines that can handle your work.</p>
 <p><strong>Multi-Cloud Ready</strong>: Works seamlessly across AWS, GCP, Azure, Kubernetes, and even your local data center.</p>
 <h3 id="core-features">Core Features</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     A["🎯 Smart Resource Detection"] --> B["⚡ Fast Scaling Decisions"]
-    B --> C["💰 Cost O...</div>
+    B --> C["💰 Cost Optimization"]
+    C --> D["☁️ Multi-Cloud Support"]
+    D --> E["🔧 Easy Configuration"]
+
+    style A fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style B fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style C fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style D fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style E fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+</div>
 
 <ul>
 <li><strong>Resource-Aware Scaling</strong>: Understands your exact compute needs (CPU, GPU, memory)</li>
@@ -10964,10 +12843,51 @@ task_queue_size = Counter(
 <h2 id="autoscaling-architecture-overview">Autoscaling Architecture Overview</h2>
 <p>Think of Ray's autoscaling system as a well-orchestrated team where each component has a specific job, but they all work together seamlessly.</p>
 <h3 id="the-big-picture-how-it-all-works-together">The Big Picture: How It All Works Together</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "📊 Monitoring Layer"
         LM[Load Metrics<br/>📈 Watches cluster usage]
-    ...</div>
+        RD[Resource Demand<br/>🎯 Detects what's needed]
+    end
+
+    subgraph "🧠 Intelligence Layer"
+        AS[Autoscaler Core<br/>🤖 Makes scaling decisions]
+        RS[Resource Scheduler<br/>⚖️ Plans optimal cluster shape]
+    end
+
+    subgraph "🔧 Execution Layer"
+        IM[Instance Manager<br/>🏗️ Manages node lifecycle]
+        NP[Node Providers<br/>☁️ Talks to cloud APIs]
+    end
+
+    subgraph "☁️ Cloud Infrastructure"
+        AWS[AWS EC2<br/>🟠 Amazon Cloud]
+        GCP[GCP Compute<br/>🔵 Google Cloud]
+        AZURE[Azure VMs<br/>🟣 Microsoft Cloud]
+        K8S[Kubernetes<br/>⚙️ Container Platform]
+    end
+
+    LM --> AS
+    RD --> AS
+    AS --> RS
+    RS --> IM
+    IM --> NP
+    NP --> AWS
+    NP --> GCP
+    NP --> AZURE
+    NP --> K8S
+
+    style LM fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style RD fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style AS fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style RS fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    style IM fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+    style NP fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style AWS fill:#ff6d00,stroke:#e65100,stroke-width:2px,color:#fff
+    style GCP fill:#2196f3,stroke:#0d47a1,stroke-width:2px,color:#fff
+    style AZURE fill:#9c27b0,stroke:#4a148c,stroke-width:2px,color:#fff
+    style K8S fill:#4caf50,stroke:#1b5e20,stroke-width:2px,color:#fff
+</div>
 
 <h3 id="what-happens-during-autoscaling-in-plain-english">What Happens During Autoscaling (In Plain English)</h3>
 <ol>
@@ -10986,9 +12906,47 @@ task_queue_size = Counter(
 </ol>
 <h3 id="multi-level-decision-making">Multi-Level Decision Making</h3>
 <p>Ray's autoscaler operates at multiple levels to make optimal decisions:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "🎯 Application Level"
-        TASKS[Tasks & Actors<br/>📋 Your actual workload]...</div>
+        TASKS[Tasks & Actors<br/>📋 Your actual workload]
+        PG[Placement Groups<br/>🏗️ Complex arrangements]
+    end
+
+    subgraph "⚖️ Resource Level"
+        CPU[CPU Requirements<br/>🔧 Processing power]
+        GPU[GPU Requirements<br/>🎮 Graphics/ML acceleration]
+        MEM[Memory Requirements<br/>💾 RAM needs]
+        CUSTOM[Custom Resources<br/>🔬 Special hardware]
+    end
+
+    subgraph "🏗️ Infrastructure Level"
+        NODES[Node Types<br/>🖥️ Machine configurations]
+        REGIONS[Availability Zones<br/>🌍 Geographic distribution]
+        COSTS[Cost Optimization<br/>💰 Budget efficiency]
+    end
+
+    TASKS --> CPU
+    TASKS --> GPU
+    TASKS --> MEM
+    PG --> NODES
+    CPU --> NODES
+    GPU --> NODES
+    MEM --> NODES
+    CUSTOM --> NODES
+    NODES --> REGIONS
+    NODES --> COSTS
+
+    style TASKS fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style PG fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style CPU fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style GPU fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style MEM fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style CUSTOM fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style NODES fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style REGIONS fill:#fff8e1,stroke:#f57c00,stroke-width:2px,color:#000
+    style COSTS fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</div>
 
 <h2 id="core-autoscaling-components">Core Autoscaling Components</h2>
 <p>Let's dive into the key players that make Ray's autoscaling system work. Think of these as different departments in a company, each with specific responsibilities.</p>
@@ -11014,10 +12972,21 @@ task_queue_size = Counter(
 - Decides when to remove idle machines (scale down)
 - Ensures the cluster never exceeds your budget or size limits</p>
 <p><strong>Key Responsibilities</strong>:
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     A["🔍 Monitor Demand"] --&gt; B["📊 Analyze Resources"]
     B --&gt; C["🎯 Make Decisions"]
-    ...</div></p>
+    C --&gt; D["🚀 Execute Changes"]
+    D --&gt; E["📝 Update Status"]
+    E --&gt; A</p>
+<pre><code>style A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+style B fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+style E fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+</code></pre>
+</div>
+
 <h3 id="2-resourcedemandscheduler-the-smart-planner">2. ResourceDemandScheduler - The Smart Planner</h3>
 <p><strong>Location</strong>: <code>python/ray/autoscaler/_private/resource_demand_scheduler.py</code></p>
 <p>This component is like a smart logistics coordinator that figures out the most efficient way to arrange your computing resources.</p>
@@ -11044,10 +13013,37 @@ task_queue_size = Counter(
 </code></pre>
 
 <p><strong>The Bin Packing Magic</strong>: Think of this like playing Tetris with cloud machines. You have different shaped "resource blocks" (your tasks) and different sized "containers" (machine types). The scheduler finds the combination that wastes the least space and costs the least money.</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "🧩 Resource Demands"
         T1["Task A<br/>2 CPU, 1 GPU<br/>🔧🎮"]
-        T2["...</div>
+        T2["Task B<br/>4 CPU, 0 GPU<br/>🔧🔧🔧🔧"]
+        T3["Task C<br/>1 CPU, 2 GPU<br/>🔧🎮🎮"]
+    end
+
+    subgraph "🏗️ Available Machine Types"
+        M1["Small Instance<br/>4 CPU, 0 GPU<br/>$0.10/hour<br/>💰"]
+        M2["GPU Instance<br/>8 CPU, 4 GPU<br/>$2.40/hour<br/>💰💰💰"]
+        M3["Balanced Instance<br/>16 CPU, 2 GPU<br/>$1.20/hour<br/>💰💰"]
+    end
+
+    subgraph "🎯 Optimal Allocation"
+        SOLUTION["1x GPU Instance<br/>Fits all tasks<br/>Total: $2.40/hour<br/>✅ Cost Efficient"]
+    end
+
+    T1 --> SOLUTION
+    T2 --> SOLUTION
+    T3 --> SOLUTION
+    M2 --> SOLUTION
+
+    style T1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style T2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    style T3 fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style M1 fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000
+    style M2 fill:#fce4ec,stroke:#880e4f,stroke-width:2px,color:#000
+    style M3 fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style SOLUTION fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+</div>
 
 <h3 id="3-loadmetrics-the-cluster-monitor">3. LoadMetrics - The Cluster Monitor</h3>
 <p><strong>Location</strong>: <code>python/ray/autoscaler/_private/load_metrics.py</code></p>
@@ -11068,9 +13064,47 @@ task_queue_size = Counter(
 </code></pre>
 
 <p><strong>What It Monitors</strong>:
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "📊 Cluster Vital Signs"
-        CPU_USAGE["CPU Usage<br/>🔧 How busy processors...</div></p>
+        CPU_USAGE["CPU Usage<br/>🔧 How busy processors are"]
+        GPU_USAGE["GPU Usage<br/>🎮 Graphics card utilization"]
+        MEMORY_USAGE["Memory Usage<br/>💾 RAM consumption"]
+        DISK_USAGE["Disk Usage<br/>💿 Storage utilization"]
+    end</p>
+<pre><code>subgraph "📋 Workload Queue"
+    PENDING_TASKS["Pending Tasks&lt;br/&gt;⏳ Work waiting to start"]
+    PLACEMENT_GROUPS["Placement Groups&lt;br/&gt;🏗️ Complex arrangements"]
+    RESOURCE_REQUESTS["Resource Requests&lt;br/&gt;🎯 Specific demands"]
+end
+
+subgraph "💓 Node Health"
+    HEARTBEATS["Node Heartbeats&lt;br/&gt;💗 Alive/Dead status"]
+    RESPONSE_TIME["Response Times&lt;br/&gt;⚡ Performance metrics"]
+    ERROR_RATES["Error Rates&lt;br/&gt;🚨 Failure indicators"]
+end
+
+CPU_USAGE --&gt; DECISION["🤖 Scaling Decision"]
+GPU_USAGE --&gt; DECISION
+MEMORY_USAGE --&gt; DECISION
+PENDING_TASKS --&gt; DECISION
+PLACEMENT_GROUPS --&gt; DECISION
+HEARTBEATS --&gt; DECISION
+
+style CPU_USAGE fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+style GPU_USAGE fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+style MEMORY_USAGE fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+style DISK_USAGE fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+style PENDING_TASKS fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+style PLACEMENT_GROUPS fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+style RESOURCE_REQUESTS fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+style HEARTBEATS fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+style RESPONSE_TIME fill:#fff8e1,stroke:#ef6c00,stroke-width:2px,color:#000
+style ERROR_RATES fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#000
+style DECISION fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
+</code></pre>
+</div>
+
 <h3 id="4-node-providers-the-cloud-connectors">4. Node Providers - The Cloud Connectors</h3>
 <p><strong>Location</strong>: <code>python/ray/autoscaler/_private/providers.py</code></p>
 <p>These are like specialized translators that know how to talk to different cloud providers. Each provider speaks its own "language" (API), but Ray abstracts this complexity.</p>
@@ -11099,9 +13133,45 @@ class GCPNodeProvider(NodeProvider):
 </code></pre>
 
 <p><strong>Supported Cloud Providers</strong>:
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "☁️ Major Cloud Providers"
-        AWS["🟠 Amazon Web Services<br/>EC2, Spot In...</div></p>
+        AWS["🟠 Amazon Web Services<br/>EC2, Spot Instances"]
+        GCP["🔵 Google Cloud Platform<br/>Compute Engine, Preemptible"]
+        AZURE["🟣 Microsoft Azure<br/>Virtual Machines, Spot VMs"]
+    end</p>
+<pre><code>subgraph "🏗️ Container Platforms"
+    K8S["⚙️ Kubernetes&lt;br/&gt;Any K8s cluster"]
+    KUBERAY["🚀 KubeRay Operator&lt;br/&gt;K8s-native Ray"]
+end
+
+subgraph "🏠 On-Premise &amp; Hybrid"
+    LOCAL["🏠 Local Provider&lt;br/&gt;Your own machines"]
+    VSPHERE["🔧 VMware vSphere&lt;br/&gt;Private cloud"]
+    EXTERNAL["🔌 External Provider&lt;br/&gt;Custom integrations"]
+end
+
+RAY_AUTOSCALER["🤖 Ray Autoscaler&lt;br/&gt;Universal Interface"] --&gt; AWS
+RAY_AUTOSCALER --&gt; GCP
+RAY_AUTOSCALER --&gt; AZURE
+RAY_AUTOSCALER --&gt; K8S
+RAY_AUTOSCALER --&gt; KUBERAY
+RAY_AUTOSCALER --&gt; LOCAL
+RAY_AUTOSCALER --&gt; VSPHERE
+RAY_AUTOSCALER --&gt; EXTERNAL
+
+style RAY_AUTOSCALER fill:#e0f2f1,stroke:#00695c,stroke-width:3px,color:#000
+style AWS fill:#ff6d00,stroke:#e65100,stroke-width:2px,color:#fff
+style GCP fill:#2196f3,stroke:#0d47a1,stroke-width:2px,color:#fff
+style AZURE fill:#9c27b0,stroke:#4a148c,stroke-width:2px,color:#fff
+style K8S fill:#4caf50,stroke:#1b5e20,stroke-width:2px,color:#fff
+style KUBERAY fill:#00bcd4,stroke:#006064,stroke-width:2px,color:#fff
+style LOCAL fill:#795548,stroke:#3e2723,stroke-width:2px,color:#fff
+style VSPHERE fill:#607d8b,stroke:#263238,stroke-width:2px,color:#fff
+style EXTERNAL fill:#ff9800,stroke:#e65100,stroke-width:2px,color:#fff
+</code></pre>
+</div>
+
 <h3 id="5-gcs-autoscaler-state-manager-the-central-coordinator">5. GCS Autoscaler State Manager - The Central Coordinator</h3>
 <p><strong>Location</strong>: <code>src/ray/gcs/gcs_server/gcs_autoscaler_state_manager.cc</code></p>
 <p>This component runs inside Ray's Global Control Service (GCS) and acts as the central hub for all autoscaling information.</p>
@@ -11127,16 +13197,73 @@ class GCPNodeProvider(NodeProvider):
 </code></pre>
 
 <p><strong>Role in the System</strong>:
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🏭 Individual Raylets"
-        R1["Raylet 1<br/>📊 Reports: 4 CPU, 2 pending ta...</div></p>
+        R1["Raylet 1<br/>📊 Reports: 4 CPU, 2 pending tasks"]
+        R2["Raylet 2<br/>📊 Reports: 8 CPU, 1 GPU, 0 pending"]
+        R3["Raylet 3<br/>📊 Reports: 2 CPU, 5 pending tasks"]
+    end</p>
+<pre><code>subgraph "🏛️ Global Control Service (GCS)"
+    GCS_ASM["GCS Autoscaler State Manager&lt;br/&gt;🧠 Central Intelligence"]
+end
+
+subgraph "🤖 Autoscaler"
+    AUTOSCALER["StandardAutoscaler&lt;br/&gt;🎯 Decision Maker"]
+end
+
+R1 --&gt; GCS_ASM
+R2 --&gt; GCS_ASM
+R3 --&gt; GCS_ASM
+GCS_ASM --&gt; AUTOSCALER
+
+GCS_ASM -.-&gt; AGG_STATE["📈 Aggregated State&lt;br/&gt;Total: 14 CPU, 1 GPU&lt;br/&gt;Pending: 7 tasks"]
+
+style R1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+style R2 fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+style R3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+style GCS_ASM fill:#fce4ec,stroke:#c2185b,stroke-width:3px,color:#000
+style AUTOSCALER fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+style AGG_STATE fill:#e0f2f1,stroke:#00695c,stroke-width:2px,color:#000
+</code></pre>
+</div>
+
 <h2 id="resource-demand-detection">Resource Demand Detection</h2>
 <p>Understanding how Ray detects and measures resource demand is crucial because this drives all autoscaling decisions. Think of it like a restaurant that needs to predict how many customers will arrive and what they'll order.</p>
 <h3 id="how-ray-sees-resource-demand">How Ray Sees Resource Demand</h3>
 <p>Ray tracks demand at multiple levels, each providing different insights:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "🎯 Immediate Demand (Next Few Seconds)"
-        QUEUED_TASKS["Queued Tasks<br/...</div>
+        QUEUED_TASKS["Queued Tasks<br/>📋 Tasks ready to run<br/>⏱️ Need resources NOW"]
+        ACTOR_CREATION["Actor Creation<br/>🎭 Long-running processes<br/>🏠 Need permanent homes"]
+    end
+
+    subgraph "📊 Aggregate Demand (Next Few Minutes)"
+        PLACEMENT_GROUPS["Placement Groups<br/>🏗️ Complex multi-node workloads<br/>🎯 Need coordinated resources"]
+        RESOURCE_REQUESTS["Resource Requests<br/>🎪 User predictions<br/>📈 Expected future load"]
+    end
+
+    subgraph "🔮 Predictive Demand (Next Hour+)"
+        AUTOSCALING_HINTS["Autoscaling Hints<br/>🧠 ML-based predictions<br/>📊 Historical patterns"]
+        MIN_WORKERS["Min Workers Config<br/>⚡ Always-on capacity<br/>🛡️ Performance guarantee"]
+    end
+
+    QUEUED_TASKS --> DECISION["🤖 Scaling Decision<br/>🎯 Add N nodes of type X"]
+    ACTOR_CREATION --> DECISION
+    PLACEMENT_GROUPS --> DECISION
+    RESOURCE_REQUESTS --> DECISION
+    AUTOSCALING_HINTS --> DECISION
+    MIN_WORKERS --> DECISION
+
+    style QUEUED_TASKS fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px,color:#000
+    style ACTOR_CREATION fill:#ffcdd2,stroke:#d32f2f,stroke-width:2px,color:#000
+    style PLACEMENT_GROUPS fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style RESOURCE_REQUESTS fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style AUTOSCALING_HINTS fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style MIN_WORKERS fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    style DECISION fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
+</div>
 
 <h3 id="resource-demand-aggregation-process">Resource Demand Aggregation Process</h3>
 <p>Here's how Ray collects and processes demand information:</p>
@@ -11168,9 +13295,30 @@ class LoadMetrics:
 
 <h3 id="types-of-resource-shapes">Types of Resource Shapes</h3>
 <p>Ray thinks about resources in "shapes" - specific combinations of resources that tasks need:</p>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "🔧 Simple Shapes"
-        CPU_ONLY["CPU Only<br/>{'CPU': 2}<br/>🔧🔧 Web servers...</div>
+        CPU_ONLY["CPU Only<br/>{'CPU': 2}<br/>🔧🔧 Web servers, APIs"]
+        MEMORY_HEAVY["Memory Heavy<br/>{'CPU': 1, 'memory': 16GB}<br/>🔧💾 Data processing"]
+    end
+
+    subgraph "🎮 GPU Shapes"
+        GPU_TRAINING["GPU Training<br/>{'CPU': 8, 'GPU': 4}<br/>🔧🔧🎮🎮 ML training"]
+        GPU_INFERENCE["GPU Inference<br/>{'CPU': 2, 'GPU': 1}<br/>🔧🎮 Model serving"]
+    end
+
+    subgraph "🔬 Custom Shapes"
+        TPU_SHAPE["TPU Workload<br/>{'CPU': 4, 'TPU': 8}<br/>🔧🧠 Specialized ML"]
+        MIXED_SHAPE["Mixed Resources<br/>{'CPU': 4, 'GPU': 2, 'FPGA': 1}<br/>🔧🎮⚡ Complex compute"]
+    end
+
+    style CPU_ONLY fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style MEMORY_HEAVY fill:#f1f8e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style GPU_TRAINING fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style GPU_INFERENCE fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
+    style TPU_SHAPE fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000
+    style MIXED_SHAPE fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+</div>
 
 <h3 id="real-time-demand-tracking">Real-Time Demand Tracking</h3>
 <p>The GCS continuously receives updates from all cluster nodes about their resource usage and pending work:</p>
@@ -11194,10 +13342,26 @@ void GcsAutoscalerStateManager::UpdateResourceLoadAndUsage(rpc::ResourcesData da
 
 <h3 id="demand-processing-pipeline">Demand Processing Pipeline</h3>
 <p>Here's the complete flow of how demand information travels through the system:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant RW as Ray Worker
     participant RL as Raylet
-    participant GCS as...</div>
+    participant GCS as Global Control Service
+    participant ASM as Autoscaler State Manager
+    participant AS as Autoscaler
+
+    Note over RW,AS: Every few seconds...
+
+    RW->>RL: Submit tasks needing<br/>{'CPU': 2, 'GPU': 1}
+    RL->>RL: Queue tasks if no resources<br/>Track demand locally
+    RL->>GCS: Report resource load<br/>{'CPU': 2, 'GPU': 1} x 5 tasks
+    GCS->>ASM: Store node resource data<br/>Aggregate across all nodes
+    AS->>ASM: Request cluster state<br/>What's the total demand?
+    ASM-->>AS: Aggregated demand<br/>Total: {'CPU': 10, 'GPU': 5}
+    AS->>AS: Calculate scaling decision<br/>Need 2 more GPU nodes
+
+    Note over AS: Triggers node creation...
+</div>
 
 <h3 id="intelligent-demand-prediction">Intelligent Demand Prediction</h3>
 <p>Ray doesn't just react to current demand - it predicts future needs:</p>
@@ -11262,9 +13426,61 @@ def _should_scale_up_preemptively(self, load_metrics):
 <li><strong>Resource Exhaustion</strong>: Memory pressure, CPU saturation, disk space</li>
 </ul>
 <h2 id="architecture-overview">Architecture Overview</h2>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Ray High Availability Architecture"
-        subgraph "Fault Tolerance Layers"...</div>
+        subgraph "Fault Tolerance Layers"
+            subgraph "Application Layer"
+                ActorFT["Actor Fault Tolerance<br/>Automatic restarts"]
+                TaskRetry["Task Retry Logic<br/>Failed task recovery"]
+                ObjectReconstruction["Object Reconstruction<br/>Lineage-based recovery"]
+            end
+
+            subgraph "System Layer"
+                NodeFailure["Node Failure Detection<br/>Health monitoring"]
+                GCSFT["GCS Fault Tolerance<br/>Head node recovery"]
+                NetworkResilience["Network Resilience<br/>Partition tolerance"]
+            end
+
+            subgraph "Storage Layer"
+                PersistentStorage["Persistent Storage<br/>Redis/External DB"]
+                Replication["Data Replication<br/>Multi-copy storage"]
+                BackupRestore["Backup & Restore<br/>State snapshots"]
+            end
+        end
+
+        subgraph "Monitoring & Detection"
+            HealthChecks["Health Check Manager<br/>Proactive monitoring"]
+            FailureDetector["Failure Detector<br/>Timeout-based detection"]
+            MetricsMonitoring["Metrics Monitoring<br/>Performance tracking"]
+        end
+
+        subgraph "Recovery Coordination"
+            RecoveryManager["Recovery Manager<br/>Orchestration logic"]
+            StateRestore["State Restoration<br/>Data recovery"]
+            ServiceRestart["Service Restart<br/>Process revival"]
+        end
+    end
+
+    ActorFT --> NodeFailure
+    TaskRetry --> GCSFT
+    ObjectReconstruction --> PersistentStorage
+
+    HealthChecks --> FailureDetector
+    FailureDetector --> RecoveryManager
+    MetricsMonitoring --> RecoveryManager
+
+    RecoveryManager --> StateRestore
+    RecoveryManager --> ServiceRestart
+
+    PersistentStorage --> StateRestore
+    Replication --> BackupRestore
+
+    style ActorFT fill:#e1f5fe
+    style GCSFT fill:#f3e5f5
+    style PersistentStorage fill:#e8f5e8
+    style HealthChecks fill:#fff3e0
+</div>
 
 <h3 id="ha-design-philosophy">HA Design Philosophy</h3>
 <p><strong>Failure Isolation</strong>: Failures in one component don't cascade to others
@@ -11274,9 +13490,28 @@ def _should_scale_up_preemptively(self, load_metrics):
 <h2 id="core-ha-components">Core HA Components</h2>
 <p>The Ray HA system consists of several interconnected components working together to provide comprehensive fault tolerance.</p>
 <h3 id="component-interaction-model">Component Interaction Model</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Monitor as Health Monitor
-    participant Detector as Failure Detect...</div>
+    participant Detector as Failure Detector  
+    participant GCS as GCS Server
+    participant Recovery as Recovery Manager
+    participant Storage as Persistent Storage
+
+    Note over Monitor,Storage: Normal Operation
+
+    Monitor->>Detector: Health check failure
+    Detector->>GCS: Report node failure
+    GCS->>Recovery: Trigger recovery process
+
+    Recovery->>Storage: Load persistent state
+    Storage-->>Recovery: Return saved state
+    Recovery->>GCS: Restore service state
+
+    GCS->>Monitor: Resume health monitoring
+
+    Note over Monitor,Storage: Service Restored
+</div>
 
 <h3 id="ha-component-responsibilities">HA Component Responsibilities</h3>
 <table>
@@ -11324,17 +13559,71 @@ def _should_scale_up_preemptively(self, load_metrics):
 <h2 id="gcs-fault-tolerance">GCS Fault Tolerance</h2>
 <p>The Global Control Service (GCS) is the central coordination point, making its fault tolerance critical for cluster survival.</p>
 <h3 id="gcs-ha-architecture">GCS HA Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "GCS High Availability"
         subgraph "Active GCS"
-            GCSProcess["...</div>
+            GCSProcess["GCS Server Process<br/>Active coordination"]
+            InMemoryState["In-Memory State<br/>Hot data"]
+            RPCHandlers["RPC Handlers<br/>Client requests"]
+        end
+
+        subgraph "Persistent Layer"
+            RedisCluster["Redis Cluster<br/>HA storage backend"]
+            StateSnapshots["State Snapshots<br/>Periodic saves"]
+            WALogs["Write-Ahead Logs<br/>Operation history"]
+        end
+
+        subgraph "Recovery System"
+            FailureDetection["Failure Detection<br/>Process monitoring"]
+            StateReconstruction["State Reconstruction<br/>Data restoration"]
+            ClientReconnection["Client Reconnection<br/>Session recovery"]
+        end
+    end
+
+    GCSProcess <--> RedisCluster
+    InMemoryState --> StateSnapshots
+    RPCHandlers --> WALogs
+
+    FailureDetection --> StateReconstruction
+    StateReconstruction <--> RedisCluster
+    StateReconstruction --> ClientReconnection
+
+    style GCSProcess fill:#e1f5fe
+    style RedisCluster fill:#f3e5f5
+    style FailureDetection fill:#e8f5e8
+</div>
 
 <h3 id="gcs-recovery-process">GCS Recovery Process</h3>
 <p>From <code>python/ray/tests/test_gcs_fault_tolerance.py:45-100</code>:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Client as Ray Client
     participant GCS as GCS Server
-    participa...</div>
+    participant Redis as Redis Storage
+    participant Monitor as Process Monitor
+    participant NewGCS as New GCS Instance
+
+    Note over Client,NewGCS: GCS Failure Scenario
+
+    Client->>GCS: Normal operations
+    GCS->>Redis: Persist state changes
+
+    Note over GCS: GCS Process Dies
+
+    Monitor->>Monitor: Detect GCS failure
+    Monitor->>NewGCS: Start new GCS instance
+
+    NewGCS->>Redis: Load persistent state
+    Redis-->>NewGCS: Return saved data
+
+    NewGCS->>NewGCS: Reconstruct in-memory state
+    NewGCS->>Client: Notify service restored
+
+    Client->>NewGCS: Resume operations
+
+    Note over Client,NewGCS: Service Fully Restored
+</div>
 
 <p><strong>GCS Recovery Configuration:</strong></p>
 <pre><code class="cpp">// From test configuration
@@ -11357,9 +13646,34 @@ struct GCSRecoveryConfig {
 <h2 id="node-failure-handling">Node Failure Handling</h2>
 <p>Ray implements sophisticated node failure detection and recovery mechanisms to maintain cluster health.</p>
 <h3 id="node-state-transitions">Node State Transitions</h3>
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+<div class="mermaid">
+stateDiagram-v2
     [*] --> Healthy: Node registration
-    Healthy --> Suspected: Health check failu...</div>
+    Healthy --> Suspected: Health check failures
+    Suspected --> Healthy: Health restored
+    Suspected --> Failed: Failure threshold exceeded
+
+    Failed --> Removed: Cleanup completion
+    Removed --> [*]: Node fully cleaned up
+
+    Healthy --> Draining: Graceful shutdown
+    Draining --> Removed: Drain completed
+
+    note right of Suspected
+        Temporary connectivity issues
+        or high load conditions
+    end note
+
+    note right of Failed
+        Node unreachable beyond
+        recovery threshold
+    end note
+
+    note right of Draining
+        Voluntary node removal
+        with task migration
+    end note
+</div>
 
 <h3 id="health-check-protocol">Health Check Protocol</h3>
 <p>From <code>src/ray/gcs/gcs_server/gcs_health_check_manager.h:40-60</code>:</p>
@@ -11404,10 +13718,40 @@ struct GCSRecoveryConfig {
 <h2 id="actor-fault-tolerance">Actor Fault Tolerance</h2>
 <p>Ray actors can automatically recover from failures through configurable restart policies and state management.</p>
 <h3 id="actor-restart-mechanisms">Actor Restart Mechanisms</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Actor Fault Tolerance System"
         subgraph "Failure Detection"
-          ...</div>
+            ProcessMonitor["Process Monitor<br/>Actor process health"]
+            HeartbeatCheck["Heartbeat Check<br/>Periodic liveness"]
+            TaskTimeout["Task Timeout<br/>Execution monitoring"]
+        end
+
+        subgraph "Restart Logic"
+            RestartPolicy["Restart Policy<br/>max_restarts config"]
+            StateRecovery["State Recovery<br/>Constructor re-execution"]
+            ResourceAllocation["Resource Allocation<br/>New node placement"]
+        end
+
+        subgraph "Execution Semantics"
+            AtMostOnce["At-Most-Once<br/>Default execution"]
+            AtLeastOnce["At-Least-Once<br/>Retry enabled"]
+            TaskReplay["Task Replay<br/>Failed task retry"]
+        end
+    end
+
+    ProcessMonitor --> RestartPolicy
+    HeartbeatCheck --> StateRecovery
+    TaskTimeout --> ResourceAllocation
+
+    RestartPolicy --> AtMostOnce
+    StateRecovery --> AtLeastOnce
+    ResourceAllocation --> TaskReplay
+
+    style ProcessMonitor fill:#e1f5fe
+    style RestartPolicy fill:#f3e5f5
+    style AtMostOnce fill:#e8f5e8
+</div>
 
 <h3 id="actor-restart-configuration">Actor Restart Configuration</h3>
 <p>From <code>doc/source/ray-core/doc_code/actor_restart.py:8-15</code>:</p>
@@ -11456,18 +13800,72 @@ class FaultTolerantActor:
 </tbody>
 </table>
 <h3 id="actor-lifecycle-during-failures">Actor Lifecycle During Failures</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Client as Ray Client
     participant ActorMgr as Actor Manager
-    p...</div>
+    participant Node1 as Original Node
+    participant Node2 as Recovery Node
+    participant Actor as Actor Instance
+
+    Note over Client,Actor: Normal Operation
+
+    Client->>Actor: Method call
+    Actor->>Client: Return result
+
+    Note over Actor: Actor Process Dies
+
+    Node1->>ActorMgr: Report actor failure
+    ActorMgr->>ActorMgr: Check restart policy
+    ActorMgr->>Node2: Schedule actor restart
+
+    Node2->>Actor: Re-run constructor
+    Actor->>Node2: Actor ready
+    Node2->>ActorMgr: Report restart success
+
+    ActorMgr->>Client: Redirect future calls
+    Client->>Actor: Resume method calls
+
+    Note over Client,Actor: Actor Recovered
+</div>
 
 <h2 id="object-fault-tolerance">Object Fault Tolerance</h2>
 <p>Ray provides automatic object recovery through lineage reconstruction and data replication.</p>
 <h3 id="object-recovery-architecture">Object Recovery Architecture</h3>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Object Fault Tolerance"
         subgraph "Failure Detection"
-            Obje...</div>
+            ObjectLoss["Object Loss Detection<br/>Missing from store"]
+            OwnerAlive["Owner Liveness Check<br/>Creator still alive"]
+            LocationQuery["Location Query<br/>Find other copies"]
+        end
+
+        subgraph "Recovery Methods"
+            CopyRecovery["Copy Recovery<br/>From other nodes"]
+            LineageReconstruction["Lineage Reconstruction<br/>Re-execute task"]
+            SpillRecovery["Spill Recovery<br/>From external storage"]
+        end
+
+        subgraph "Reconstruction Process"
+            TaskResubmit["Task Resubmission<br/>Original computation"]
+            DependencyRecovery["Dependency Recovery<br/>Recursive reconstruction"]
+            ResultStorage["Result Storage<br/>New object creation"]
+        end
+    end
+
+    ObjectLoss --> CopyRecovery
+    OwnerAlive --> LineageReconstruction
+    LocationQuery --> SpillRecovery
+
+    CopyRecovery --> TaskResubmit
+    LineageReconstruction --> DependencyRecovery
+    SpillRecovery --> ResultStorage
+
+    style ObjectLoss fill:#e1f5fe
+    style CopyRecovery fill:#f3e5f5
+    style TaskResubmit fill:#e8f5e8
+</div>
 
 <h3 id="object-recovery-algorithm">Object Recovery Algorithm</h3>
 <p>From <code>src/ray/core_worker/object_recovery_manager.h:70-90</code>:</p>
@@ -11507,10 +13905,40 @@ bool RecoverObject(const ObjectID &amp;object_id) {
 <h2 id="health-monitoring">Health Monitoring</h2>
 <p>Ray implements comprehensive health monitoring across all cluster components.</p>
 <h3 id="multi-layer-health-monitoring">Multi-Layer Health Monitoring</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Health Monitoring Architecture"
         subgraph "Component Level"
-          ...</div>
+            ProcessHealth["Process Health<br/>CPU, memory, status"]
+            ServiceHealth["Service Health<br/>RPC responsiveness"]
+            ResourceHealth["Resource Health<br/>Utilization monitoring"]
+        end
+
+        subgraph "Node Level"
+            NodeHeartbeat["Node Heartbeat<br/>Periodic liveness"]
+            DiskSpace["Disk Space<br/>Storage availability"]
+            NetworkConnectivity["Network Connectivity<br/>Communication status"]
+        end
+
+        subgraph "Cluster Level"
+            ClusterTopology["Cluster Topology<br/>Node membership"]
+            ServiceMesh["Service Mesh<br/>Inter-service health"]
+            OverallHealth["Overall Health<br/>Aggregate status"]
+        end
+    end
+
+    ProcessHealth --> NodeHeartbeat
+    ServiceHealth --> DiskSpace
+    ResourceHealth --> NetworkConnectivity
+
+    NodeHeartbeat --> ClusterTopology
+    DiskSpace --> ServiceMesh
+    NetworkConnectivity --> OverallHealth
+
+    style ProcessHealth fill:#e1f5fe
+    style NodeHeartbeat fill:#f3e5f5
+    style ClusterTopology fill:#e8f5e8
+</div>
 
 <h3 id="health-check-implementation">Health Check Implementation</h3>
 <p><strong>GCS Health Check Manager Configuration:</strong></p>
@@ -11549,16 +13977,67 @@ class HealthCheckContext {
 <h2 id="recovery-mechanisms">Recovery Mechanisms</h2>
 <p>Ray implements several coordinated recovery mechanisms to handle different failure scenarios.</p>
 <h3 id="recovery-strategy-selection">Recovery Strategy Selection</h3>
-<div class="diagram-placeholder">📊 Diagram: flowchart TD
+<div class="mermaid">
+flowchart TD
     FailureDetected["Failure Detected"]
 
-    FailureDetected --> NodeFailure{"Node ...</div>
+    FailureDetected --> NodeFailure{"Node Failure?"}
+    FailureDetected --> ActorFailure{"Actor Failure?"}
+    FailureDetected --> ObjectLoss{"Object Loss?"}
+    FailureDetected --> NetworkPartition{"Network Partition?"}
+
+    NodeFailure -->|Yes| NodeRecovery["Node Recovery Process"]
+    ActorFailure -->|Yes| ActorRestart["Actor Restart Process"]
+    ObjectLoss -->|Yes| ObjectReconstruction["Object Reconstruction"]
+    NetworkPartition -->|Yes| PartitionHandling["Partition Handling"]
+
+    NodeRecovery --> TaskMigration["Migrate Running Tasks"]
+    NodeRecovery --> ResourceReallocation["Reallocate Resources"]
+    NodeRecovery --> ClusterRebalance["Rebalance Cluster"]
+
+    ActorRestart --> CheckRestartPolicy["Check Restart Policy"]
+    CheckRestartPolicy --> RestartActor["Restart on New Node"]
+    CheckRestartPolicy --> FailPermanently["Fail Permanently"]
+
+    ObjectReconstruction --> FindCopies["Find Existing Copies"]
+    FindCopies --> ReconstructFromLineage["Reconstruct from Lineage"]
+    FindCopies --> RecoverFromSpill["Recover from Spill"]
+
+    style FailureDetected fill:#ff9999
+    style NodeRecovery fill:#99ccff
+    style ActorRestart fill:#99ff99
+    style ObjectReconstruction fill:#ffcc99
+</div>
 
 <h3 id="recovery-coordination-protocol">Recovery Coordination Protocol</h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant Monitor as Health Monitor
     participant GCS as GCS Server
-    part...</div>
+    participant Recovery as Recovery Coordinator
+    participant Nodes as Healthy Nodes
+    participant Storage as Persistent Storage
+
+    Note over Monitor,Storage: Failure Recovery Flow
+
+    Monitor->>GCS: Report component failure
+    GCS->>Recovery: Initiate recovery process
+
+    Recovery->>Storage: Assess impact scope
+    Storage-->>Recovery: Return affected components
+
+    Recovery->>Nodes: Query available resources
+    Nodes-->>Recovery: Report capacity
+
+    Recovery->>Recovery: Plan recovery strategy
+    Recovery->>Nodes: Execute recovery actions
+
+    Nodes->>Recovery: Report recovery progress
+    Recovery->>GCS: Update cluster state
+    GCS->>Monitor: Resume monitoring
+
+    Note over Monitor,Storage: Recovery Complete
+</div>
 
 <h3 id="performance-impact-analysis">Performance Impact Analysis</h3>
 <p><strong>Recovery Time Objectives:</strong></p>
@@ -11700,10 +14179,40 @@ struct GCSRecoveryConfig {
 <h2 id="network-partition-recovery">Network Partition Recovery</h2>
 <p>Ray handles network partitions through timeout-based detection and coordinated recovery.</p>
 <h3 id="partition-detection-and-isolation">Partition Detection and Isolation</h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Network Partition Handling"
         subgraph "Detection Phase"
-            Ti...</div>
+            TimeoutDetection["Timeout Detection<br/>Communication failures"]
+            ConnectivityTest["Connectivity Test<br/>Network probes"]
+            ConsensusCheck["Consensus Check<br/>Quorum validation"]
+        end
+
+        subgraph "Isolation Response"
+            PartitionMapping["Partition Mapping<br/>Node grouping"]
+            QuorumSelection["Quorum Selection<br/>Authority designation"]
+            MinorityShutdown["Minority Shutdown<br/>Split-brain prevention"]
+        end
+
+        subgraph "Recovery Process"
+            NetworkHealing["Network Healing<br/>Connectivity restoration"]
+            StateReconciliation["State Reconciliation<br/>Conflict resolution"]
+            ServiceResumption["Service Resumption<br/>Normal operation"]
+        end
+    end
+
+    TimeoutDetection --> PartitionMapping
+    ConnectivityTest --> QuorumSelection
+    ConsensusCheck --> MinorityShutdown
+
+    PartitionMapping --> NetworkHealing
+    QuorumSelection --> StateReconciliation
+    MinorityShutdown --> ServiceResumption
+
+    style TimeoutDetection fill:#e1f5fe
+    style QuorumSelection fill:#f3e5f5
+    style NetworkHealing fill:#e8f5e8
+</div>
 
 <h3 id="split-brain-prevention">Split-Brain Prevention</h3>
 <p><strong>Quorum-Based Decision Making:</strong></p>
@@ -12209,10 +14718,42 @@ alert_thresholds = {
 - Resource allocation requests</p>
 <p>The custom protocol achieves <strong>microsecond-level latency</strong> compared to gRPC's millisecond overhead for these frequent, simple operations.</p>
 <h2 id="protocol-architecture-overview">Protocol Architecture Overview</h2>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Single Ray Node"
         subgraph "Application Layer"
-            Worker1["Py...</div>
+            Worker1["Python Worker"]
+            Worker2["Java Worker"] 
+            Driver["Ray Driver"]
+        end
+
+        subgraph "Ray Core"
+            Raylet["Raylet Process"]
+            ObjectStore["Plasma Object Store"]
+        end
+
+        subgraph "Transport Layer"
+            UDS1["UDS Connection 1"]
+            UDS2["UDS Connection 2"]
+            UDS3["UDS Connection 3"]
+            PlasmaUDS["Plasma UDS"]
+        end
+    end
+
+    Worker1 -.->|"Custom Protocol<br/>FlatBuffers + UDS"| UDS1
+    Worker2 -.->|"Custom Protocol<br/>FlatBuffers + UDS"| UDS2
+    Driver -.->|"Custom Protocol<br/>FlatBuffers + UDS"| UDS3
+
+    UDS1 --> Raylet
+    UDS2 --> Raylet
+    UDS3 --> Raylet
+
+    Worker1 -.->|"Plasma Protocol<br/>FlatBuffers + UDS"| PlasmaUDS
+    Worker2 -.->|"Plasma Protocol<br/>FlatBuffers + UDS"| PlasmaUDS
+    PlasmaUDS --> ObjectStore
+
+    Raylet <--> ObjectStore
+</div>
 
 <h3 id="key-components">Key Components</h3>
 <ol>
@@ -12223,9 +14764,24 @@ alert_thresholds = {
 </ol>
 <h2 id="wire-protocol-format">Wire Protocol Format</h2>
 <p>Ray's wire protocol is elegantly simple, optimized for both performance and correctness:</p>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Ray Message Frame"
-        Cookie["Ray Cookie<br/>(8 bytes)<br/>Protocol ID"]...</div>
+        Cookie["Ray Cookie<br/>(8 bytes)<br/>Protocol ID"]
+        Type["Message Type<br/>(8 bytes)<br/>FlatBuffer enum"]
+        Length["Payload Length<br/>(8 bytes)<br/>Body size"]
+        Payload["FlatBuffer Payload<br/>(variable)<br/>Serialized data"]
+    end
+
+    Cookie --> Type
+    Type --> Length  
+    Length --> Payload
+
+    style Cookie fill:#e1f5fe
+    style Type fill:#f3e5f5
+    style Length fill:#e8f5e8
+    style Payload fill:#fff3e0
+</div>
 
 <h3 id="message-header-structure">Message Header Structure</h3>
 <p>From <code>src/ray/common/client_connection.cc:217-250</code>:</p>
@@ -12259,9 +14815,18 @@ alert_thresholds = {
 - <strong>Total gRPC overhead: 35-95 microseconds</strong></p>
 <h3 id="2-message-pattern-optimization">2. <strong>Message Pattern Optimization</strong></h3>
 <p>Ray's communication patterns are very specific:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "Ray's Message Patterns"
-        Simple["90% Simple Notifications<br/>- ActorR...</div>
+        Simple["90% Simple Notifications<br/>- ActorReady<br/>- TaskDone<br/>- Unblocked"]
+        Medium["8% Medium Messages<br/>- TaskSubmission<br/>- ObjectRequest"]
+        Complex["2% Complex Messages<br/>- Registration<br/>- Configuration"]
+    end
+
+    style Simple fill:#c8e6c9
+    style Medium fill:#fff9c4
+    style Complex fill:#ffcdd2
+</div>
 
 <p><strong>Ray's optimization:</strong>
 - 90% of messages are tiny (&lt; 50 bytes)
@@ -12283,9 +14848,31 @@ alert_thresholds = {
 - Easier to profile and optimize</p>
 <h2 id="message-types-and-structure">Message Types and Structure</h2>
 <p>Ray defines comprehensive message types from <code>src/ray/raylet/format/node_manager.fbs</code>:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "Worker → Raylet Messages"
-        WT1["RegisterClientRequest<br/>Worker regis...</div>
+        WT1["RegisterClientRequest<br/>Worker registration"]
+        WT2["SubmitTask<br/>Task submission"]  
+        WT3["ActorCreationTaskDone<br/>Actor ready"]
+        WT4["NotifyUnblocked<br/>Dependency resolved"]
+        WT5["DisconnectClientRequest<br/>Worker shutdown"]
+        WT6["FetchOrReconstruct<br/>Object request"]
+        WT7["AnnounceWorkerPort<br/>gRPC port announcement"]
+    end
+
+    subgraph "Raylet → Worker Messages"
+        RT1["RegisterClientReply<br/>Registration response"]
+        RT2["ExecuteTask<br/>Task assignment"]
+        RT3["WaitReply<br/>Object availability"]
+        RT4["DisconnectClientReply<br/>Shutdown acknowledgment"]
+        RT5["AnnounceWorkerPortReply<br/>Port announcement ACK"]
+    end
+
+    WT1 -.-> RT1
+    WT5 -.-> RT4
+    WT7 -.-> RT5
+    WT6 -.-> RT3
+</div>
 
 <h3 id="core-message-categories">Core Message Categories</h3>
 <p><strong>1. Connection Lifecycle</strong>
@@ -12302,10 +14889,36 @@ alert_thresholds = {
 - <code>NotifyUnblocked</code>: Signal dependency resolution</p>
 <h2 id="connection-establishment">Connection Establishment</h2>
 <p>The connection establishment follows a specific handshake protocol:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant W as Worker Process
     participant R as Raylet
-    participant UDS ...</div>
+    participant UDS as Unix Domain Socket
+    participant P as Plasma Store
+
+    Note over W,R: 1. Socket Connection Phase
+    W->>UDS: Connect to raylet socket
+    UDS-->>W: Connection established
+
+    Note over W,R: 2. Worker Registration Phase  
+    W->>R: RegisterClientRequest<br/>{worker_type, worker_id, language, ip, pid}
+    R->>R: Validate and allocate resources
+    R-->>W: RegisterClientReply<br/>{success, assigned_port, raylet_id}
+
+    Note over W,R: 3. Port Announcement Phase
+    W->>R: AnnounceWorkerPort<br/>{grpc_port}
+    R->>R: Register worker for remote access
+    R-->>W: AnnounceWorkerPortReply<br/>{success}
+
+    Note over W,R: 4. Plasma Connection Phase
+    W->>P: Connect to plasma store
+    P-->>W: Plasma connection ready
+
+    Note over W,R: 5. Ready State
+    rect rgb(200, 255, 200)
+        Note over W,R: Worker ready to receive tasks
+    end
+</div>
 
 <h3 id="registration-details">Registration Details</h3>
 <p>From the FlatBuffer schema:</p>
@@ -12327,11 +14940,16 @@ alert_thresholds = {
 <p>Ray uses different communication patterns optimized for specific use cases:</p>
 <h3 id="1-fire-and-forget-pattern">1. Fire-and-Forget Pattern</h3>
 <p>For non-critical notifications that don't require responses:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant W as Worker
     participant R as Raylet
 
-    W->>R: ActorCreatio...</div>
+    W->>R: ActorCreationTaskDone
+    Note over W,R: No response expected
+    W->>R: NotifyUnblocked
+    Note over W,R: No response expected
+</div>
 
 <p><strong>Implementation:</strong></p>
 <pre><code class="cpp">Status RayletClient::ActorCreationTaskDone() {
@@ -12341,26 +14959,46 @@ alert_thresholds = {
 
 <h3 id="2-request-reply-pattern">2. Request-Reply Pattern</h3>
 <p>For operations requiring confirmation or data return:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant W as Worker
     participant R as Raylet
 
-    W->>R: WaitRequest<...</div>
+    W->>R: WaitRequest<br/>{object_ids, timeout}
+    R->>R: Check object availability
+    R-->>W: WaitReply<br/>{ready_objects, remaining_objects}
+</div>
 
 <h3 id="3-asynchronous-notification-pattern">3. Asynchronous Notification Pattern</h3>
 <p>For events that may arrive at any time:</p>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant R as Raylet
     participant W as Worker
 
-    Note over R: Task b...</div>
+    Note over R: Task becomes ready
+    R->>W: ExecuteTask<br/>{task_specification}
+    W->>W: Execute task
+    W->>R: Task completion notification
+</div>
 
 <h2 id="performance-characteristics">Performance Characteristics</h2>
 <h3 id="latency-analysis">Latency Analysis</h3>
 <p>Ray's custom protocol achieves significant performance advantages:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Latency Comparison (microseconds)"
-        Custom["Ray Custom Protocol<br/>🟢 ...</div>
+        Custom["Ray Custom Protocol<br/>🟢 1-10 μs<br/>- Zero serialization overhead<br/>- Direct UDS access<br/>- Minimal protocol stack"]
+
+        GRPC["gRPC over UDS<br/>🟡 50-200 μs<br/>- HTTP/2 overhead<br/>- Protobuf serialization<br/>- Complex connection state"]
+
+        TCP["gRPC over TCP<br/>🔴 200-1000 μs<br/>- Network stack overhead<br/>- TCP connection management<br/>- Additional network hops"]
+    end
+
+    style Custom fill:#c8e6c9
+    style GRPC fill:#fff9c4  
+    style TCP fill:#ffcdd2
+</div>
 
 <h3 id="throughput-characteristics">Throughput Characteristics</h3>
 <p><strong>Message Size Efficiency:</strong></p>
@@ -12462,21 +15100,57 @@ alert_thresholds = {
 </table>
 <h3 id="ray-vs-grpc-design-philosophy">Ray vs. gRPC Design Philosophy</h3>
 <p><strong>Ray's Approach:</strong>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "Ray Philosophy"
         Perf["Performance First"]
-        Simple["Simple Mess...</div></p>
+        Simple["Simple Messages"]
+        Local["Local-Only"]
+        ZeroCopy["Zero-Copy Optimized"]
+    end</p>
+<pre><code>Perf --&gt; Simple
+Simple --&gt; Local  
+Local --&gt; ZeroCopy
+</code></pre>
+</div>
+
 <p><strong>gRPC's Approach:</strong>
-<div class="diagram-placeholder">📊 Diagram: graph LR
+<div class="mermaid">
+graph LR
     subgraph "gRPC Philosophy"
         Compat["Cross-Platform"]
-        Feature["Feature Ri...</div></p>
+        Feature["Feature Rich"]
+        Network["Network Optimized"]
+        Standard["Standardized"]
+    end</p>
+<pre><code>Compat --&gt; Feature
+Feature --&gt; Network
+Network --&gt; Standard
+</code></pre>
+</div>
+
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="flatbuffers-integration">FlatBuffers Integration</h3>
 <p>Ray chose FlatBuffers over Protocol Buffers for several reasons:</p>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "FlatBuffers Advantages"
-        ZeroCopy["Zero-copy Access<br/>Direct buffer ...</div>
+        ZeroCopy["Zero-copy Access<br/>Direct buffer reading"]
+        Speed["Faster Serialization<br/>No parsing step"]
+        Memory["Lower Memory Usage<br/>No object allocation"]
+        Forward["Forward/Backward Compatibility<br/>Schema evolution"]
+    end
+
+    subgraph "Protocol Buffer Drawbacks"
+        Parse["Parsing Required<br/>Object creation overhead"]
+        Memory2["Memory Allocation<br/>Object instantiation"]
+        Slower["Serialization Cost<br/>Field-by-field processing"]
+    end
+
+    ZeroCopy -.->|"vs"| Parse
+    Speed -.->|"vs"| Slower
+    Memory -.->|"vs"| Memory2
+</div>
 
 <h3 id="connection-management">Connection Management</h3>
 <p>Each worker maintains a persistent connection to the raylet:</p>
@@ -12517,11 +15191,20 @@ if (expected_type != read_type) {
 </code></pre>
 
 <p><strong>3. Graceful Shutdown:</strong>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant W as Worker
     participant R as Raylet</p>
-<pre><code>Note over W: Worker...&lt;/div&gt;
+<pre><code>Note over W: Worker shutting down
+W-&gt;&gt;R: DisconnectClientRequest&lt;br/&gt;{exit_type, details}
+R-&gt;&gt;R: Cleanup worker state
+R-&gt;&gt;R: Release resources
+R--&gt;&gt;W: DisconnectClientReply
+W-&gt;&gt;W: Close connection
+Note over W,R: Clean shutdown complete
 </code></pre>
+</div>
+
 <h2 id="advantages-and-trade-offs">Advantages and Trade-offs</h2>
 <h3 id="advantages">Advantages</h3>
 <p><strong>1. Performance Benefits:</strong>
@@ -13175,10 +15858,22 @@ ray start --num_workers_soft_limit=1000 --min-worker-port=10000 --max-worker-por
 <h2 id="sequence-diagrams-and-flow-charts">Sequence Diagrams and Flow Charts</h2>
 <p>This section provides visual representations of Ray's port allocation and communication flows to help understand the system architecture.</p>
 <h3 id="1-port-pool-initialization-flow"><strong>1. Port Pool Initialization Flow</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant R as Raylet Start
     participant WP as WorkerPool Constructor
-    p...</div>
+    participant PQ as Port Queue
+
+    R->>WP: 1. Initialize WorkerPool
+    WP->>PQ: 2. Create free_ports_ queue
+    WP->>WP: 3. Parse port configuration<br/>(range or explicit list)
+    loop For each port in range
+        WP->>PQ: 4. Push port to queue<br/>(10000→10100)
+    end
+    WP->>R: 5. Pool Ready<br/>(101 ports available)
+
+    Note over R,PQ: Port Range: --min-worker-port=10000 --max-worker-port=10100<br/>Result: 101 ports in queue [10000, 10001, 10002, ..., 10100]
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13212,10 +15907,23 @@ Result: 101 ports in queue [10000, 10001, 10002, ..., 10100]
 </details>
 
 <h3 id="2-worker-registration-and-port-assignment-sequence"><strong>2. Worker Registration and Port Assignment Sequence</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant W as Worker Process
     participant R as Raylet
-    participant WP a...</div>
+    participant WP as WorkerPool
+    participant PQ as Port Queue
+
+    W->>R: 1. Register with raylet
+    R->>WP: 2. PopWorker()
+    WP->>PQ: 3. GetNextFreePort()
+    PQ->>WP: 4. Return port 10005
+    WP->>WP: 5. SetAssignedPort(10005)
+    R->>W: 6. Assigned port: 10005
+    W->>W: 7. Start gRPC server<br/>on port 10005
+
+    Note over W,PQ: Worker now has dedicated port 10005 for its gRPC server
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13253,10 +15961,25 @@ Result: Worker now has dedicated port 10005 for its gRPC server
 </details>
 
 <h3 id="3-task-assignment-flow-diagram"><strong>3. Task Assignment Flow Diagram</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: sequenceDiagram
+<div class="mermaid">
+sequenceDiagram
     participant D as Driver/Client
     participant G as GCS
-    participant R as Ray...</div>
+    participant R as Raylet
+    participant W as Worker
+
+    D->>G: 1. task.remote()
+    G->>G: 2. Schedule Task<br/>(find optimal node)
+    G->>R: 3. RequestWorkerLease<br/>(via Node Manager Port ~10001)
+    R->>R: 4. PopWorker()<br/>(assign port from pool)
+    R->>G: 5. WorkerLease<br/>(includes port info)
+    G->>W: 6. SubmitTask<br/>(via Worker Port ~10005)
+    W->>W: 7. Execute Task
+    W->>G: 8. Task Result
+    G->>D: 9. ray.get() returns result
+
+    Note over D,W: Ports Used:<br/>• GCS Port: ~6379 (Driver → GCS)<br/>• Node Manager Port: ~10001 (GCS → Raylet)<br/>• Worker Port: ~10005 (Task execution)
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13306,13 +16029,39 @@ Ports Used:
 </details>
 
 <h3 id="4-actor-vs-task-port-usage-lifecycle"><strong>4. Actor vs Task Port Usage Lifecycle</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+<div class="mermaid">
+stateDiagram-v2
     [*] --> ActorCreated : Actor.remote()
-    ActorCreated --> PortAssigned : Get de...</div>
+    ActorCreated --> PortAssigned : Get dedicated port 10005
+    PortAssigned --> MethodCalls : Port held throughout lifetime
+    MethodCalls --> MethodCalls : Same port 10005 used
+    MethodCalls --> ActorDies : ray.kill() or process exit
+    ActorDies --> PortReleased : Return port 10005 to pool
+    PortReleased --> [*]
 
-<div class="diagram-placeholder">📊 Diagram: stateDiagram-v2
+    state "Actor Lifecycle" as AL {
+        [*] --> PortDedicated
+        PortDedicated --> PortDedicated : Long-lived connection
+    }
+</div>
+
+<div class="mermaid">
+stateDiagram-v2
     [*] --> TaskSubmitted : task.remote()
-    TaskSubmitted --> WorkerAssigned : Get...</div>
+    TaskSubmitted --> WorkerAssigned : Get worker from pool
+    WorkerAssigned --> PortBorrowed : Use worker's port temporarily
+    PortBorrowed --> TaskExecuting : Execute on port 10005
+    TaskExecuting --> TaskComplete : Task finishes
+    TaskComplete --> PortReturned : Worker returns to pool
+    PortReturned --> [*]
+
+    WorkerAssigned --> TaskSubmitted : Worker reused for next task
+
+    state "Task Lifecycle" as TL {
+        [*] --> PortShared
+        PortShared --> PortShared : Short-lived, reusable
+    }
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13346,9 +16095,27 @@ Key Difference:
 </details>
 
 <h3 id="5-same-node-vs-cross-node-communication-flow"><strong>5. Same-Node vs Cross-Node Communication Flow</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: graph TD
+<div class="mermaid">
+graph TD
     subgraph "Same Node Communication (Direct)"
-        A[Task A<br/>Port 10005<br/>Worker ...</div>
+        A[Task A<br/>Port 10005<br/>Worker 1] -->|Direct gRPC Call| B[Task B<br/>Port 10006<br/>Worker 2]
+        A -.-> R1[Same Raylet]
+        B -.-> R1
+    end
+
+    subgraph "Cross Node Communication (Via Raylet)"
+        C[Task A<br/>Port 10005<br/>Node 1] --> D[Raylet 1<br/>Node Mgr Port 10001]
+        D -->|Network| E[Raylet 2<br/>Node Mgr Port 10001]
+        E --> F[Task B<br/>Port 10006<br/>Node 2]
+    end
+
+    style A fill:#e1f5fe
+    style B fill:#e1f5fe
+    style C fill:#fff3e0
+    style F fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#f3e5f5
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13377,9 +16144,35 @@ Benefits: Network routing, Load balancing, Fault tolerance
 </details>
 
 <h3 id="6-port-exhaustion-scenario-diagram"><strong>6. Port Exhaustion Scenario Diagram</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "Normal Operation ✅"
-        PP1[Port Pool<br/>10000, 10001, 10002, 10003, 100...</div>
+        PP1[Port Pool<br/>10000, 10001, 10002, 10003, 10004<br/>5 ports available]
+        W1[Worker 1<br/>Port: 10000<br/>Status: BUSY]
+        W2[Worker 2<br/>Port: 10001<br/>Status: BUSY]
+        AP1[Available Ports: 3<br/>Status: HEALTHY]
+    end
+
+    subgraph "Port Exhaustion ❌"
+        PP2[Port Pool<br/>EMPTY<br/>0 ports available]
+        BW1[Worker 1<br/>Port: 10000<br/>BLOCKED: ray.get()]
+        BW2[Worker 2<br/>Port: 10001<br/>BLOCKED: ray.get()]
+        BW3[Worker 3<br/>Port: 10002<br/>BLOCKED: ray.get()]
+        BW4[Worker 4<br/>Port: 10003<br/>BLOCKED: ray.get()]
+        BW5[Worker 5<br/>Port: 10004<br/>BLOCKED: ray.get()]
+        NTR[New Task Request<br/>❌ FAIL: No available ports]
+    end
+
+    style PP1 fill:#e8f5e8
+    style AP1 fill:#e8f5e8
+    style PP2 fill:#ffe8e8
+    style NTR fill:#ffe8e8
+    style BW1 fill:#fff3cd
+    style BW2 fill:#fff3cd
+    style BW3 fill:#fff3cd
+    style BW4 fill:#fff3cd
+    style BW5 fill:#fff3cd
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13416,9 +16209,26 @@ New Task Request → ❌ FAIL: &quot;No available ports&quot;
 </details>
 
 <h3 id="7-worker-pool-size-vs-port-range-decision-tree"><strong>7. Worker Pool Size vs Port Range Decision Tree</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: flowchart TD
+<div class="mermaid">
+flowchart TD
     A[START: Configure Ray Worker Ports] --> B{What's your workload?}
-    B -->|Many Lo...</div>
+    B -->|Many Long-lived| C[Many Actors<br/>Long-lived]
+    B -->|Many Short-lived| D[Many Tasks<br/>Short-lived]
+
+    C --> E[Port Need = Actor Count<br/>Example: 500 actors]
+    D --> F[Port Need = Peak Concurrent Tasks<br/>Example: 200 tasks]
+
+    E --> G[Combine Requirements]
+    F --> G
+    G --> H[Total Port Need<br/>= 500 + 200 = 700]
+
+    H --> I[Configure:<br/>num_workers_soft_limit = 700<br/>port range = 10000-10700]
+    I --> J[RESULT:<br/>700 concurrent workers<br/>Each with dedicated port]
+
+    style A fill:#e1f5fe
+    style J fill:#e8f5e8
+    style I fill:#fff3e0
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13460,10 +16270,58 @@ New Task Request → ❌ FAIL: &quot;No available ports&quot;
 </details>
 
 <h3 id="8-complete-ray-cluster-port-architecture"><strong>8. Complete Ray Cluster Port Architecture</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "HEAD NODE"
         subgraph "Infrastructure Ports"
-            GCS[GCS Server...</div>
+            GCS[GCS Server<br/>Port 6379]
+            DASH[Dashboard<br/>Port 8265]
+            RC[Ray Client Server<br/>Port 10001]
+            NM_H[Node Manager<br/>Port 10002]
+            OM_H[Object Manager<br/>Port 10003]
+            MA_H[Metrics Agent<br/>Port 10004]
+            RE_H[Runtime Env Agent<br/>Port 10005]
+        end
+
+        subgraph "Worker Pool (20000-20100)"
+            A1[Actor 1<br/>Port 20000]
+            A2[Actor 2<br/>Port 20001]
+            TW1[Task Worker 1<br/>Port 20002]
+            TW2[Task Worker 2<br/>Port 20003]
+        end
+    end
+
+    subgraph "WORKER NODE 1"
+        subgraph "Infrastructure Ports "
+            NM_W[Node Manager<br/>Port 10002]
+            OM_W[Object Manager<br/>Port 10003]
+            MA_W[Metrics Agent<br/>Port 10004]
+            RE_W[Runtime Env Agent<br/>Port 10005]
+        end
+
+        subgraph "Worker Pool (20000-20100) "
+            A3[Actor 3<br/>Port 20000]
+            A4[Actor 4<br/>Port 20001]
+            TW3[Task Worker 3<br/>Port 20002]
+            TW4[Task Worker 4<br/>Port 20003]
+        end
+    end
+
+    Driver((Driver)) -->|6379| GCS
+    GCS -->|10002| NM_H
+    GCS -->|10002| NM_W
+    NM_H -->|20000+| A1
+    NM_W -->|20000+| A3
+    A1 -->|Direct| A3
+    OM_H -->|Network| OM_W
+
+    style GCS fill:#ff9999
+    style Driver fill:#99ccff
+    style A1 fill:#99ff99
+    style A3 fill:#99ff99
+    style TW1 fill:#ffcc99
+    style TW3 fill:#ffcc99
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
@@ -13517,9 +16375,30 @@ Worker ──(10003)───→ Object Manager ──(Network)──→ Object 
 </details>
 
 <h3 id="9-visual-summary-port-types-and-usage-patterns"><strong>9. Visual Summary: Port Types and Usage Patterns</strong></h3>
-<div class="diagram-placeholder">📊 Diagram: graph TB
+<div class="mermaid">
+graph TB
     subgraph "RAY PORT CATEGORIES"
-        subgraph "1. INFRASTRUCTURE PORTS (Fixed, 1 per ...</div>
+        subgraph "1. INFRASTRUCTURE PORTS (Fixed, 1 per node)"
+            IP[• GCS Port: 6379<br/>• Dashboard: 8265<br/>• Node Manager: 10002<br/>• Object Manager: 10003<br/>• Metrics Agent: 10004<br/>• Runtime Env Agent: 10005]
+        end
+
+        subgraph "2. WORKER PORTS (Dynamic, from shared pool)"
+            SPP[SHARED PORT POOL<br/>20000, 20001, 20002, 20003, ..., 20100]
+            SPP --> ACTORS[ACTORS<br/>Port: 1:1<br/>Lifetime: Long]
+            SPP --> TASKS[TASKS<br/>Port: N:1<br/>Lifetime: Short]
+        end
+
+        subgraph "3. PORT LIMITS"
+            LIMITS[Max Concurrent Ports = min:<br/>• Port Range Size: 100<br/>• num_workers_soft_limit: 50<br/>• System FD Limit: 1024<br/>Result: 50 concurrent workers maximum]
+        end
+    end
+
+    style IP fill:#ffcccc
+    style SPP fill:#ccffcc
+    style ACTORS fill:#ccccff
+    style TASKS fill:#ffffcc
+    style LIMITS fill:#ffccff
+</div>
 
 <details>
 <summary>📁 Text-based diagram (backup)</summary>
